@@ -1,550 +1,175 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JR Apostilas | Plataforma de Estudos</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JR Apostilas | Plataforma SESAU</title>
 
-    body {
-      background: #f5f7fb;
-      color: #1f2937;
-      line-height: 1.5;
-    }
+<style>
 
-    header {
-      background: linear-gradient(135deg, #0f172a, #1e3a8a);
-      color: white;
-      padding: 24px 20px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-    }
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#020617,#0f172a,#064e3b);
+color:white;
+}
 
-    .topbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
+/* HEADER */
+header{
+padding:20px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.5);
+position:sticky;
+top:0;
+}
 
-    .logo {
-      display: flex;
-      flex-direction: column;
-    }
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#22c55e;
+}
 
-    .logo small {
-      font-size: 14px;
-      opacity: 0.8;
-      letter-spacing: 1px;
-    }
+/* HERO */
+.hero{
+padding:60px 40px;
+background:linear-gradient(90deg,rgba(0,0,0,0.8),transparent),
+url('https://images.unsplash.com/photo-1588776814546-ec7e3d6c9e3d') center/cover;
+}
 
-    .logo h1 {
-      font-size: 28px;
-      margin-top: 4px;
-    }
+.hero h1{
+font-size:42px;
+max-width:600px;
+}
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 18px;
-      font-weight: bold;
-      font-size: 15px;
-    }
+.hero p{
+color:#cbd5f5;
+}
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+/* CONTAINER */
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px;
+}
 
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 20px 50px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 30px;
-      align-items: center;
-    }
+/* CARD */
+.card{
+background:rgba(255,255,255,0.05);
+border-radius:20px;
+margin-bottom:30px;
+padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
 
-    .hero-text h2 {
-      font-size: 42px;
-      margin-bottom: 16px;
-      color: white;
-    }
+/* VIDEO */
+.video{
+width:100%;
+height:300px;
+border-radius:15px;
+margin-bottom:15px;
+}
 
-    .hero-text p {
-      font-size: 18px;
-      opacity: 0.95;
-      margin-bottom: 24px;
-      max-width: 650px;
-    }
+/* BOTÕES */
+.btn{
+display:block;
+margin:8px 0;
+padding:12px;
+border-radius:10px;
+background:#22c55e;
+color:white;
+text-align:center;
+text-decoration:none;
+font-weight:bold;
+}
 
-    .hero-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
+.btn:hover{
+background:#16a34a;
+}
 
-    .btn {
-      display: inline-block;
-      padding: 14px 22px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.2s ease;
-    }
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
 
-    .btn-primary {
-      background: #22c55e;
-      color: white;
-    }
+h2{
+margin-bottom:10px;
+}
 
-    .btn-primary:hover {
-      background: #16a34a;
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.12);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    .hero-card {
-      background: white;
-      color: #111827;
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-
-    .hero-card h3 {
-      margin-bottom: 12px;
-      font-size: 24px;
-      color: #0f172a;
-    }
-
-    .hero-card p {
-      color: #4b5563;
-      margin-bottom: 12px;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 35px 20px 70px;
-    }
-
-    .section-title {
-      font-size: 30px;
-      margin-bottom: 10px;
-      color: #0f172a;
-    }
-
-    .section-subtitle {
-      color: #6b7280;
-      margin-bottom: 28px;
-      font-size: 16px;
-    }
-
-    .notice {
-      background: #fff7ed;
-      border: 1px solid #fdba74;
-      color: #9a3412;
-      padding: 18px;
-      border-radius: 14px;
-      margin-bottom: 35px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 22px;
-      margin-bottom: 45px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
-      padding: 24px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .card h3 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      color: #111827;
-    }
-
-    .card p {
-      color: #6b7280;
-      margin-bottom: 18px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      background: #dbeafe;
-      color: #1d4ed8;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-bottom: 16px;
-    }
-
-    .materials {
-      display: grid;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .material-link {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 16px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      text-decoration: none;
-      color: #111827;
-      background: #f9fafb;
-      transition: 0.2s ease;
-      font-weight: 600;
-    }
-
-    .material-link:hover {
-      background: #eff6ff;
-      border-color: #93c5fd;
-      transform: translateY(-1px);
-    }
-
-    .material-link span {
-      color: #2563eb;
-      font-size: 14px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-      margin: 30px 0 45px;
-    }
-
-    .info-box {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-    }
-
-    .info-box h4 {
-      margin-bottom: 8px;
-      color: #111827;
-    }
-
-    .info-box p {
-      color: #6b7280;
-      font-size: 15px;
-    }
-
-    .whatsapp-box {
-      background: linear-gradient(135deg, #16a34a, #15803d);
-      color: white;
-      padding: 28px;
-      border-radius: 18px;
-      text-align: center;
-      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.25);
-    }
-
-    .whatsapp-box h3 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .whatsapp-box p {
-      max-width: 700px;
-      margin: 0 auto 18px;
-      opacity: 0.95;
-    }
-
-    footer {
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 24px 20px;
-      margin-top: 50px;
-    }
-
-    footer p {
-      opacity: 0.85;
-      font-size: 14px;
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 40px;
-      }
-
-      .hero-text h2 {
-        font-size: 32px;
-      }
-
-      nav a {
-        margin-left: 12px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .hero-text h2 {
-        font-size: 28px;
-      }
-
-      .section-title {
-        font-size: 26px;
-      }
-
-      .topbar {
-        align-items: flex-start;
-      }
-
-      nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      nav a {
-        margin-left: 0;
-      }
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <header>
-    <div class="topbar">
-      <div class="logo">
-        <small>JR</small>
-        <h1>JR Apostilas</h1>
-      </div>
 
-      <nav>
-        <a href="#disciplinas">Disciplinas</a>
-        <a href="#plataforma">Plataforma</a>
-        <a href="#materiais">Materiais</a>
-        <a href="#contato">Atendimento</a>
-      </nav>
-    </div>
+<header>
+<div class="logo">JR Apostilas</div>
+</header>
 
-    <section class="hero">
-      <div class="hero-text">
-        <h2>Ambiente de estudos com acesso rápido às disciplinas, videoaulas e materiais em PDF</h2>
-        <p>
-          Organização profissional para estudar com mais clareza, foco e agilidade.
-          Acesse disciplinas essenciais, materiais selecionados, conteúdos em PDF e videoaulas
-          em um ambiente simples, direto e pronto para acompanhar sua preparação.
-        </p>
+<section class="hero">
+<h1>Plataforma Completa SESAU</h1>
+<p>Estude com videoaulas + materiais organizados para aprovação</p>
+</section>
 
-        <div class="hero-buttons">
-          <a class="btn btn-primary" href="#materiais">Explorar disciplinas</a>
-          <a class="btn btn-secondary" href="https://wa.me/5569992395000" target="_blank">Falar no WhatsApp</a>
-        </div>
-      </div>
+<div class="container">
 
-      <div class="hero-card">
-        <h3>Conhecimentos específicos</h3>
-        <p>Atendimento direto para conteúdos específicos de cada cargo.</p>
-        <p>
-          Para materiais personalizados e complementares, o envio é feito diretamente pelo WhatsApp,
-          conforme a necessidade do aluno e do cargo pretendido.
-        </p>
-        <a class="btn btn-primary" href="https://wa.me/5569992395000" target="_blank">Solicitar atendimento</a>
-      </div>
-    </section>
-  </header>
+<div class="grid">
 
-  <main>
-    <section id="plataforma">
-      <h2 class="section-title">Plataforma premium de estudos</h2>
-      <p class="section-subtitle">
-        Estrutura centralizada para facilitar a navegação do aluno e o acesso rápido aos conteúdos principais.
-      </p>
+<!-- PORTUGUÊS -->
+<div class="card">
+<h2>Português</h2>
 
-      <div class="info-grid">
-        <div class="info-box">
-          <h4>Navegação rápida</h4>
-          <p>Estrutura simples para chegar aos conteúdos com poucos cliques.</p>
-        </div>
+<iframe class="video"
+src="https://www.youtube.com/embed/22iA3PPjr7c"></iframe>
 
-        <div class="info-box">
-          <h4>Materiais organizados</h4>
-          <p>Conteúdos separados por disciplina para estudo mais objetivo.</p>
-        </div>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-principais-topicos.pdf" target="_blank">📄 Principais tópicos</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-mapa-mental.pdf" target="_blank">📄 Mapa mental</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-redacao-nota-100.pdf" target="_blank">📄 Redação</a>
 
-        <div class="info-box">
-          <h4>Acesso direto</h4>
-          <p>Links prontos para abrir os materiais e as aulas imediatamente.</p>
-        </div>
+</div>
 
-        <div class="info-box">
-          <h4>Suporte individual</h4>
-          <p>Envio de conteúdo específico conforme o cargo de cada aluno.</p>
-        </div>
-      </div>
-    </section>
+<!-- RACIOCÍNIO -->
+<div class="card">
+<h2>Raciocínio Lógico</h2>
 
-    <div class="notice">
-      <strong>Importante:</strong> agora os materiais em PDF estão sendo carregados a partir do repositório
-      <strong>sesau-2026</strong>, por isso os botões abaixo já foram configurados com os links completos dos arquivos.
-    </div>
+<iframe class="video"
+src="https://www.youtube.com/embed/h4ec__8WOp0"></iframe>
 
-    <section id="disciplinas">
-      <h2 class="section-title">Disciplinas em destaque</h2>
-      <p class="section-subtitle">
-        Base forte para concursos com conteúdos organizados por matéria.
-      </p>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-apostila.pdf" target="_blank">📄 Apostila</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-mapas-mentais.pdf" target="_blank">📄 Mapas mentais</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-simulados.pdf" target="_blank">📄 Simulados</a>
 
-      <div class="cards">
-        <div class="card">
-          <div class="badge">Português</div>
-          <h3>Português</h3>
-          <p>Mapas mentais, redação, tópicos principais e apoio em videoaulas.</p>
-        </div>
+</div>
 
-        <div class="card">
-          <div class="badge">Raciocínio Lógico + SUS</div>
-          <h3>Raciocínio Lógico + SUS</h3>
-          <p>Base forte para concursos com materiais objetivos e prontos para revisão.</p>
-        </div>
+<!-- SUS -->
+<div class="card">
+<h2>SUS (Saúde)</h2>
 
-        <div class="card">
-          <div class="badge">Informática</div>
-          <h3>Informática</h3>
-          <p>Segurança, criptografia, malware, backup e conteúdos essenciais da área.</p>
-        </div>
-      </div>
-    </section>
+<iframe class="video"
+src="https://www.youtube.com/embed/gV7gjHEmDyc"></iframe>
 
-    <section id="materiais">
-      <h2 class="section-title">Disciplinas disponíveis</h2>
-      <p class="section-subtitle">
-        Selecione a matéria desejada para abrir os materiais disponíveis.
-      </p>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-1000-questoes.pdf" target="_blank">📄 1000 Questões</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-legislacao.pdf" target="_blank">📄 Legislação</a>
 
-      <div class="cards">
-        <div class="card">
-          <div class="badge">Base</div>
-          <h3>Português</h3>
-          <p>Conteúdo focado em interpretação, revisão e redação.</p>
+</div>
 
-          <div class="materials">
-            <a class="material-link" href="#" target="_blank">
-              01. Videoaula
-              <span>Em breve</span>
-            </a>
+<!-- INFORMÁTICA -->
+<div class="card">
+<h2>Informática</h2>
 
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-principais-topicos.pdf" target="_blank">
-              02. Principais tópicos
-              <span>Abrir PDF</span>
-            </a>
+<iframe class="video"
+src="https://www.youtube.com/embed/cYqTVCrED_s"></iframe>
 
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-mapa-mental.pdf" target="_blank">
-              03. Mapa mental
-              <span>Abrir PDF</span>
-            </a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-criptografia-e-backup.pdf" target="_blank">📄 Criptografia</a>
+<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-malware-e-ataques.pdf" target="_blank">📄 Malware</a>
 
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-redacao-nota-100.pdf" target="_blank">
-              04. Redação nota 100
-              <span>Abrir PDF</span>
-            </a>
-          </div>
-        </div>
+</div>
 
-        <div class="card">
-          <div class="badge">Lógica</div>
-          <h3>Raciocínio Lógico</h3>
-          <p>Apostila, mapas mentais e simulados para reforço da base.</p>
+</div>
 
-          <div class="materials">
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-apostila.pdf" target="_blank">
-              01. Apostila
-              <span>Abrir PDF</span>
-            </a>
+</div>
 
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-mapas-mentais.pdf" target="_blank">
-              02. Mapas mentais
-              <span>Abrir PDF</span>
-            </a>
-
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-simulados.pdf" target="_blank">
-              03. Simulados
-              <span>Abrir PDF</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="badge">SUS</div>
-          <h3>SUS</h3>
-          <p>Conteúdos essenciais para reforçar legislação e prática de questões.</p>
-
-          <div class="materials">
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-1000-questoes.pdf" target="_blank">
-              01. 1000 questões
-              <span>Abrir PDF</span>
-            </a>
-
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-legislacao.pdf" target="_blank">
-              02. Legislação
-              <span>Abrir PDF</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="badge">Informática</div>
-          <h3>Informática</h3>
-          <p>Conteúdos sobre proteção digital, ataques, segurança e backup.</p>
-
-          <div class="materials">
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-criptografia-e-backup.pdf" target="_blank">
-              01. Criptografia e backup
-              <span>Abrir PDF</span>
-            </a>
-
-            <a class="material-link" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-malware-e-ataques.pdf" target="_blank">
-              02. Malware e ataques
-              <span>Abrir PDF</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="contato" class="whatsapp-box">
-      <h3>Atendimento direto</h3>
-      <p>
-        Para conteúdos específicos de cada cargo, suporte individual, materiais complementares
-        e orientação sobre o preparatório, o atendimento é feito diretamente pelo WhatsApp.
-      </p>
-      <a class="btn btn-secondary" href="https://wa.me/5569992395000" target="_blank">Falar no WhatsApp</a>
-    </section>
-  </main>
-
-  <footer>
-    <p>JR Apostilas © 2026 | Plataforma de estudos organizada para acelerar sua preparação.</p>
-  </footer>
 </body>
 </html>
