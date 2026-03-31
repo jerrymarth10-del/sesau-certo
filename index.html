@@ -3,28 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JR Apostilas | Login</title>
-  <meta name="description" content="Área de acesso JR Apostilas" />
+  <title>JR Apostilas | Plataforma SESAU 2026</title>
+  <meta name="description" content="Plataforma JR Apostilas com login visual, videoaulas e materiais em PDF." />
   <style>
     :root{
       --bg:#07141a;
       --bg2:#0b2028;
       --card:rgba(10,28,37,.88);
+      --card2:#10232d;
       --line:rgba(255,255,255,.08);
       --text:#f4fbfd;
       --muted:#b8d0d8;
       --green:#22c55e;
       --green2:#16a34a;
       --blue:#38bdf8;
+      --blue2:#0ea5e9;
       --shadow:0 20px 60px rgba(0,0,0,.35);
-      --radius:28px;
-      --max:1200px;
+      --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:16px;
+      --max:1280px;
     }
 
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
     }
 
     body{
@@ -48,6 +56,12 @@
         linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
       background-size:34px 34px;
       mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 85%);
+      z-index:0;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
     .container{
@@ -57,8 +71,8 @@
       z-index:1;
     }
 
-    .topbar{
-      padding:18px 0;
+    .hidden{
+      display:none !important;
     }
 
     .brand{
@@ -98,14 +112,73 @@
       letter-spacing:-.4px;
     }
 
-    .hero{
-      min-height:calc(100vh - 94px);
-      display:grid;
-      place-items:center;
-      padding:20px 0 40px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border:none;
+      cursor:pointer;
+      border-radius:16px;
+      padding:14px 20px;
+      font-weight:800;
+      transition:.2s ease;
+      font-size:16px;
     }
 
-    .hero-grid{
+    .btn-primary{
+      background:linear-gradient(135deg, var(--green), var(--green2));
+      color:#fff;
+      box-shadow:0 14px 30px rgba(22,163,74,.28);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.03);
+    }
+
+    .btn-outline{
+      color:#fff;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .btn-outline:hover{
+      background:rgba(255,255,255,.09);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color:#d9fff0;
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+
+    .topbar{
+      padding:18px 0;
+    }
+
+    .login-page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .login-hero{
+      flex:1;
+      display:grid;
+      place-items:center;
+      padding:12px 0 40px;
+    }
+
+    .login-grid{
       display:grid;
       grid-template-columns:1.1fr .9fr;
       gap:26px;
@@ -132,21 +205,7 @@
       max-width:720px;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      color:#d9fff0;
-      font-size:13px;
-      font-weight:800;
-      margin-bottom:18px;
-    }
-
-    h1{
+    .hero-content h1{
       font-size:56px;
       line-height:.98;
       letter-spacing:-1.6px;
@@ -246,32 +305,16 @@
       box-shadow:0 0 0 4px rgba(56,189,248,.10);
     }
 
-    .btn{
-      height:56px;
-      border:none;
-      border-radius:16px;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg, var(--green), var(--green2));
-      color:#fff;
-      box-shadow:0 14px 30px rgba(22,163,74,.28);
-    }
-
-    .btn-primary:hover{
-      transform:translateY(-1px);
-      filter:brightness(1.03);
-    }
-
-    .login-note{
-      margin-top:16px;
-      font-size:13px;
-      color:#9bb4bc;
-      line-height:1.5;
+    .error{
+      display:none;
+      margin-top:4px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(239,68,68,.12);
+      border:1px solid rgba(239,68,68,.24);
+      color:#fecaca;
+      font-size:14px;
+      font-weight:700;
     }
 
     .mini-box{
@@ -294,36 +337,396 @@
       line-height:1.5;
     }
 
-    .error{
-      display:none;
-      margin-top:4px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(239,68,68,.12);
-      border:1px solid rgba(239,68,68,.24);
-      color:#fecaca;
+    .login-note{
+      margin-top:16px;
+      font-size:13px;
+      color:#9bb4bc;
+      line-height:1.5;
+    }
+
+    .platform-page{
+      min-height:100vh;
+    }
+
+    .platform-topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(12px);
+      background:rgba(5,10,20,.70);
+      border-bottom:1px solid var(--line);
+    }
+
+    .platform-topbar-inner{
+      min-height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .menu{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .menu a{
+      color:var(--muted);
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .menu a:hover{
+      color:#fff;
+    }
+
+    .platform-hero{
+      padding:52px 0 24px;
+    }
+
+    .hero-platform{
+      border:1px solid var(--line);
+      border-radius:30px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:var(--shadow);
+      background:
+        linear-gradient(90deg, rgba(5,10,20,.88) 0%, rgba(5,10,20,.74) 45%, rgba(5,10,20,.45) 100%),
+        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=80') center/cover;
+    }
+
+    .hero-platform-content{
+      position:relative;
+      z-index:1;
+      padding:42px;
+      max-width:760px;
+    }
+
+    .hero-platform-content h1{
+      font-size:46px;
+      line-height:1.02;
+      letter-spacing:-1px;
+      margin-bottom:16px;
+    }
+
+    .hero-platform-content p{
+      color:#dbe3f2;
+      font-size:18px;
+      max-width:620px;
+    }
+
+    .welcome{
+      margin-top:18px;
+      color:#a7f3d0;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    section{
+      padding:26px 0;
+    }
+
+    .section-head{
+      margin-bottom:22px;
+    }
+
+    .section-head small{
+      display:block;
+      color:#86efac;
+      font-weight:800;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      margin-bottom:8px;
+      font-size:12px;
+    }
+
+    .section-head h2{
+      font-size:38px;
+      line-height:1.05;
+      margin-bottom:10px;
+      letter-spacing:-1px;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      max-width:780px;
+      font-size:16px;
+    }
+
+    .modules{
+      display:grid;
+      gap:24px;
+      margin-top:6px;
+    }
+
+    .module{
+      overflow:hidden;
+      border-radius:28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.03)),
+        rgba(8, 24, 32, 0.92);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .module-top{
+      padding:26px 28px 18px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .module-left{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+    }
+
+    .module-icon{
+      width:62px;
+      height:62px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      font-size:26px;
+      background:linear-gradient(135deg, rgba(25,195,125,.22), rgba(56,189,248,.24));
+      border:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+    }
+
+    .module-copy h3{
+      font-size:30px;
+      margin-bottom:8px;
+      letter-spacing:-.7px;
+    }
+
+    .module-copy p{
+      color:var(--muted);
+      max-width:760px;
+      font-size:15px;
+    }
+
+    .module-badge{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(25,195,125,.12);
+      color:#d1fae5;
+      border:1px solid rgba(25,195,125,.2);
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .module-content{
+      padding:24px 28px 30px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .video-wrap, .materials-panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      overflow:hidden;
+    }
+
+    .video-head, .materials-head{
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid rgba(255,255,255,.06);
       font-size:14px;
       font-weight:700;
+      color:#d9f3f8;
+      flex-wrap:wrap;
     }
 
-    .footer{
-      text-align:center;
-      padding:20px 0 36px;
-      color:#99b4bc;
+    .video-frame{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      background:#031015;
+    }
+
+    .video-frame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .video-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      padding:16px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+    }
+
+    .btn-small{
+      padding:12px 16px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .lists-wrap{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:14px;
+      padding:16px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .lesson-list, .pdf-list{
+      display:grid;
+      gap:10px;
+      align-content:start;
+    }
+
+    .material-link{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      transition:.2s ease;
+      min-width:0;
+    }
+
+    .material-link:hover{
+      transform:translateY(-2px);
+      border-color:rgba(56,189,248,.35);
+      background:linear-gradient(180deg, rgba(56,189,248,.08), rgba(255,255,255,.04));
+    }
+
+    .material-main{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .material-icon{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:rgba(25,195,125,.12);
+      border:1px solid rgba(25,195,125,.18);
+      font-size:18px;
+      flex-shrink:0;
+    }
+
+    .material-text{
+      min-width:0;
+    }
+
+    .material-text strong{
+      display:block;
+      font-size:14px;
+      color:#fff;
+      margin-bottom:4px;
+    }
+
+    .material-text small{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .material-cta{
+      color:#d1fae5;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+
+    .specific-box{
+      background:linear-gradient(135deg, #0f172a, #0b2440);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:28px;
+      padding:40px;
+      display:grid;
+      gap:20px;
+      box-shadow:0 20px 50px rgba(0,0,0,.4);
+    }
+
+    .specific-box h3{
+      font-size:28px;
+    }
+
+    .specific-box p{
+      color:#cbd5f5;
+      font-size:16px;
+      max-width:700px;
+    }
+
+    .specific-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+      gap:14px;
+    }
+
+    .specific-item{
+      background:rgba(255,255,255,.05);
+      padding:18px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .specific-note{
       font-size:13px;
+      color:#94a3b8;
     }
 
-    @media (max-width: 980px){
-      .hero-grid{
+    footer{
+      background:#0f172a;
+      color:white;
+      text-align:center;
+      padding:24px 20px;
+      margin-top:50px;
+    }
+
+    footer p{
+      opacity:.85;
+      font-size:14px;
+    }
+
+    @media (max-width: 1080px){
+      .login-grid,
+      .lists-wrap{
         grid-template-columns:1fr;
       }
 
-      h1{
+      .hero-content h1{
         font-size:42px;
       }
 
       .hero-left{
         min-height:auto;
+      }
+
+      .hero-platform-content h1{
+        font-size:38px;
       }
     }
 
@@ -336,134 +739,229 @@
         padding:22px 18px;
       }
 
-      h1{
+      .hero-content h1{
         font-size:34px;
       }
 
       .brand-text strong{
         font-size:20px;
       }
+
+      .platform-topbar-inner{
+        padding:12px 0;
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .hero-platform-content{
+        padding:28px 22px;
+      }
+
+      .hero-platform-content h1{
+        font-size:30px;
+      }
+
+      .section-head h2{
+        font-size:30px;
+      }
+
+      .module-top, .module-content{
+        padding-left:18px;
+        padding-right:18px;
+      }
+
+      .module-copy h3{
+        font-size:24px;
+      }
+
+      .specific-box{
+        padding:24px 18px;
+      }
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container">
-      <div class="brand">
-        <div class="brand-badge">JR</div>
-        <div class="brand-text">
-          <small>Área do aluno</small>
-          <strong>JR Apostilas</strong>
+  <div id="loginPage" class="login-page">
+    <header class="topbar">
+      <div class="container">
+        <div class="brand">
+          <div class="brand-badge">JR</div>
+          <div class="brand-text">
+            <small>Área do aluno</small>
+            <strong>JR Apostilas</strong>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <section class="hero-card hero-left">
-          <div class="hero-content">
-            <div class="pill">🏥 Plataforma temática da saúde • SESAU 2026</div>
-            <h1>Entre na sua plataforma de estudos</h1>
+    <main class="login-hero">
+      <div class="container">
+        <div class="login-grid">
+          <section class="hero-card hero-left">
+            <div class="hero-content">
+              <div class="pill">🏥 Plataforma temática da saúde • SESAU 2026</div>
+              <h1>Entre na sua plataforma de estudos</h1>
+              <p>
+                Videoaulas, PDFs e materiais organizados em uma área visual profissional
+                para acompanhar sua preparação.
+              </p>
+
+              <div class="hero-points">
+                <div class="hero-point"><strong>Português com vídeo + PDFs</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>Raciocínio Lógico com vídeo + PDFs</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>SUS com vídeo + PDFs</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>Informática com vídeo + PDFs</strong><span>Liberado</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero-card login-card">
+            <h2>Acessar plataforma</h2>
+            <p>Faça seu acesso para entrar na área de estudos da JR Apostilas.</p>
+
+            <form class="form" id="loginForm">
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="Digite seu e-mail" required />
+              </div>
+
+              <div class="field">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" placeholder="Digite sua senha" required />
+              </div>
+
+              <div class="error" id="errorBox">Senha incorreta. Tente novamente.</div>
+
+              <button type="submit" class="btn btn-primary">Entrar na plataforma</button>
+            </form>
+
+            <div class="mini-box">
+              <strong>Específicas por cargo</strong>
+              <span>
+                Enfermagem, técnico em enfermagem, administrativo e outros cargos
+                são enviados de forma personalizada no WhatsApp.
+              </span>
+            </div>
+
+            <div class="login-note">
+              Senha padrão deste modelo: <strong>jr2026</strong>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="platformPage" class="platform-page hidden">
+    <header class="platform-topbar">
+      <div class="container platform-topbar-inner">
+        <div class="brand">
+          <div class="brand-badge">JR</div>
+          <div class="brand-text">
+            <small>Plataforma Premium</small>
+            <strong>JR Apostilas</strong>
+          </div>
+        </div>
+
+        <nav class="menu">
+          <a href="#inicio">Início</a>
+          <a href="#disciplinas">Disciplinas</a>
+          <a href="#especificas">Específicas</a>
+          <button class="btn btn-outline" id="logoutBtn" type="button">Sair</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="inicio">
+      <section class="platform-hero">
+        <div class="container">
+          <div class="hero-platform">
+            <div class="hero-platform-content">
+              <div class="pill">🏥 Plataforma temática da saúde • SESAU 2026</div>
+              <h1>Bem-vindo à sua área de estudos</h1>
+              <p>
+                Videoaulas e materiais em PDF organizados por disciplina, com visual profissional
+                e acesso rápido aos conteúdos principais.
+              </p>
+              <div class="welcome" id="welcomeText">Acesso liberado</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="disciplinas">
+        <div class="container">
+          <div class="section-head">
+            <small>Conteúdo liberado</small>
+            <h2>Disciplinas disponíveis</h2>
             <p>
-              Videoaulas, materiais em PDF e conteúdos organizados em um ambiente simples,
-              bonito e profissional para acompanhar sua preparação.
+              Cada bloco abaixo reúne a videoaula principal e os PDFs da matéria.
+            </p>
+          </div>
+
+          <div class="modules" id="modulesContainer"></div>
+        </div>
+      </section>
+
+      <section id="especificas">
+        <div class="container">
+          <div class="section-head">
+            <small>Conteúdo exclusivo</small>
+            <h2>Área de Conhecimentos Específicos</h2>
+            <p>
+              Cada cargo possui conteúdos diferentes. O material específico é enviado
+              de forma personalizada conforme o cargo do aluno.
+            </p>
+          </div>
+
+          <div class="specific-box">
+            <h3>📚 Material específico sob medida para o seu cargo</h3>
+
+            <p>
+              Aqui você não recebe conteúdo genérico. O material específico é separado de acordo
+              com o seu cargo, seja enfermagem, técnico em enfermagem, administrativo ou outros.
             </p>
 
-            <div class="hero-points">
-              <div class="hero-point">
-                <strong>Português com aula e PDFs</strong>
-                <span>Liberado</span>
-              </div>
-              <div class="hero-point">
-                <strong>Raciocínio Lógico com material completo</strong>
-                <span>Liberado</span>
-              </div>
-              <div class="hero-point">
-                <strong>SUS / Saúde com foco em concurso</strong>
-                <span>Liberado</span>
-              </div>
-              <div class="hero-point">
-                <strong>Informática com apoio em videoaula</strong>
-                <span>Liberado</span>
-              </div>
+            <div class="specific-grid">
+              <div class="specific-item">🔹 Enfermagem</div>
+              <div class="specific-item">🔹 Técnico em Enfermagem</div>
+              <div class="specific-item">🔹 Administrativo</div>
+              <div class="specific-item">🔹 Outros cargos</div>
+            </div>
+
+            <div>
+              <a href="https://wa.me/message/2HS6FDWA5WHFL1" target="_blank" class="btn btn-primary">
+                📲 Pegar minha específica agora
+              </a>
+            </div>
+
+            <div class="specific-note">
+              Atendimento rápido. Você informa seu cargo e recebe o material correto direto no WhatsApp.
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+    </main>
 
-        <section class="hero-card login-card">
-          <h2>Acessar plataforma</h2>
-          <p>
-            Faça seu acesso para entrar na área de estudos da JR Apostilas.
-          </p>
-
-          <form class="form" id="loginForm">
-            <div class="field">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" placeholder="Digite seu e-mail" required />
-            </div>
-
-            <div class="field">
-              <label for="senha">Senha</label>
-              <input type="password" id="senha" placeholder="Digite sua senha" required />
-            </div>
-
-            <div class="error" id="errorBox">
-              Senha incorreta. Tente novamente.
-            </div>
-
-            <button type="submit" class="btn btn-primary">Entrar na plataforma</button>
-          </form>
-
-          <div class="mini-box">
-            <strong>Conhecimentos específicos</strong>
-            <span>
-              Os conteúdos específicos por cargo são enviados de forma personalizada,
-              conforme a necessidade de cada aluno.
-            </span>
-          </div>
-
-          <div class="login-note">
-            Após o pagamento, o aluno recebe o acesso para entrar na área de estudos.
-          </div>
-        </section>
-      </div>
-    </div>
-  </main>
-
-  <div class="footer">
-    JR Apostilas © 2026 • Plataforma de estudos
+    <footer>
+      <p>JR Apostilas © 2026 | Plataforma organizada com videoaulas e PDFs para concursos da área da saúde.</p>
+    </footer>
   </div>
 
   <script>
-    const loginForm = document.getElementById('loginForm');
-    const errorBox = document.getElementById('errorBox');
-
-    // TROQUE A SENHA AQUI
     const SENHA_CORRETA = "jr2026";
 
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value.trim();
-      const senha = document.getElementById('senha').value.trim();
-
-      if (!email) {
-        errorBox.style.display = 'block';
-        errorBox.textContent = 'Preencha seu e-mail para continuar.';
-        return;
-      }
-
-      if (senha === SENHA_CORRETA) {
-        localStorage.setItem('jr_apostilas_logado', 'true');
-        localStorage.setItem('jr_apostilas_email', email);
-        window.location.href = 'plataforma.html';
-      } else {
-        errorBox.style.display = 'block';
-        errorBox.textContent = 'Senha incorreta. Tente novamente.';
-      }
-    });
-  </script>
-</body>
-</html
+    const data = [
+      {
+        id: "portugues",
+        icon: "📘",
+        title: "Português",
+        desc: "Mapas mentais, tópicos principais, redação e videoaula em um só lugar.",
+        badge: "Vídeo + PDFs",
+        embed: "22iA3PPjr7c",
+        openVideo: "https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3",
+        lessons: [
+          { icon:"🎥", title:"Videoaula principal de Português", note:"Aula liberada", url:"https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3" }
+        ],
+        pdfs: [
+          { icon:"📄", title:"Principais tópicos", note
