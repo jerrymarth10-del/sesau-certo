@@ -1,175 +1,469 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JR Apostilas | Plataforma SESAU</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JR Apostilas | Login</title>
+  <meta name="description" content="Área de acesso JR Apostilas" />
+  <style>
+    :root{
+      --bg:#07141a;
+      --bg2:#0b2028;
+      --card:rgba(10,28,37,.88);
+      --line:rgba(255,255,255,.08);
+      --text:#f4fbfd;
+      --muted:#b8d0d8;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --blue:#38bdf8;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:28px;
+      --max:1200px;
+    }
 
-<style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
 
-body{
-margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#020617,#0f172a,#064e3b);
-color:white;
-}
+    body{
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.16), transparent 22%),
+        radial-gradient(circle at top right, rgba(34,197,94,.14), transparent 22%),
+        linear-gradient(180deg, #041015 0%, #07141a 45%, #08171d 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
 
-/* HEADER */
-header{
-padding:20px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:rgba(0,0,0,0.5);
-position:sticky;
-top:0;
-}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size:34px 34px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 85%);
+    }
 
-.logo{
-font-size:26px;
-font-weight:bold;
-color:#22c55e;
-}
+    .container{
+      width:min(calc(100% - 28px), var(--max));
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
 
-/* HERO */
-.hero{
-padding:60px 40px;
-background:linear-gradient(90deg,rgba(0,0,0,0.8),transparent),
-url('https://images.unsplash.com/photo-1588776814546-ec7e3d6c9e3d') center/cover;
-}
+    .topbar{
+      padding:18px 0;
+    }
 
-.hero h1{
-font-size:42px;
-max-width:600px;
-}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
 
-.hero p{
-color:#cbd5f5;
-}
+    .brand-badge{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, var(--green), var(--blue));
+      color:#fff;
+      font-weight:800;
+      font-size:22px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 12px 30px rgba(34,197,94,.24);
+      flex-shrink:0;
+    }
 
-/* CONTAINER */
-.container{
-max-width:1200px;
-margin:auto;
-padding:30px;
-}
+    .brand-text small{
+      display:block;
+      color:#9debc2;
+      font-size:12px;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:3px;
+    }
 
-/* CARD */
-.card{
-background:rgba(255,255,255,0.05);
-border-radius:20px;
-margin-bottom:30px;
-padding:20px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-}
+    .brand-text strong{
+      display:block;
+      font-size:24px;
+      letter-spacing:-.4px;
+    }
 
-/* VIDEO */
-.video{
-width:100%;
-height:300px;
-border-radius:15px;
-margin-bottom:15px;
-}
+    .hero{
+      min-height:calc(100vh - 94px);
+      display:grid;
+      place-items:center;
+      padding:20px 0 40px;
+    }
 
-/* BOTÕES */
-.btn{
-display:block;
-margin:8px 0;
-padding:12px;
-border-radius:10px;
-background:#22c55e;
-color:white;
-text-align:center;
-text-decoration:none;
-font-weight:bold;
-}
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:26px;
+      align-items:stretch;
+    }
 
-.btn:hover{
-background:#16a34a;
-}
+    .hero-card{
+      border-radius:34px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
 
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
-}
+    .hero-left{
+      min-height:620px;
+      background:
+        linear-gradient(100deg, rgba(4,12,16,.9) 0%, rgba(5,16,21,.82) 45%, rgba(8,24,31,.68) 100%),
+        url('https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1600&q=80') center/cover;
+      position:relative;
+    }
 
-h2{
-margin-bottom:10px;
-}
+    .hero-content{
+      padding:46px;
+      max-width:720px;
+    }
 
-</style>
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color:#d9fff0;
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:56px;
+      line-height:.98;
+      letter-spacing:-1.6px;
+      margin-bottom:18px;
+      max-width:720px;
+    }
+
+    .hero-content p{
+      color:#d4e7ec;
+      font-size:18px;
+      max-width:640px;
+      margin-bottom:26px;
+    }
+
+    .hero-points{
+      display:grid;
+      gap:14px;
+      margin-top:24px;
+      max-width:520px;
+    }
+
+    .hero-point{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .hero-point strong{
+      font-size:15px;
+    }
+
+    .hero-point span{
+      color:#a7f3d0;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .login-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .login-card h2{
+      font-size:32px;
+      margin-bottom:10px;
+    }
+
+    .login-card p{
+      color:var(--muted);
+      margin-bottom:22px;
+      font-size:15px;
+    }
+
+    .form{
+      display:grid;
+      gap:16px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .field label{
+      font-size:14px;
+      font-weight:700;
+      color:#d7f2f8;
+    }
+
+    .field input{
+      width:100%;
+      height:54px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      padding:0 16px;
+      font-size:15px;
+      outline:none;
+    }
+
+    .field input::placeholder{
+      color:#aebcc8;
+    }
+
+    .field input:focus{
+      border-color:rgba(56,189,248,.45);
+      box-shadow:0 0 0 4px rgba(56,189,248,.10);
+    }
+
+    .btn{
+      height:56px;
+      border:none;
+      border-radius:16px;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--green), var(--green2));
+      color:#fff;
+      box-shadow:0 14px 30px rgba(22,163,74,.28);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.03);
+    }
+
+    .login-note{
+      margin-top:16px;
+      font-size:13px;
+      color:#9bb4bc;
+      line-height:1.5;
+    }
+
+    .mini-box{
+      margin-top:22px;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .mini-box strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:15px;
+    }
+
+    .mini-box span{
+      color:#b8d0d8;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .error{
+      display:none;
+      margin-top:4px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(239,68,68,.12);
+      border:1px solid rgba(239,68,68,.24);
+      color:#fecaca;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .footer{
+      text-align:center;
+      padding:20px 0 36px;
+      color:#99b4bc;
+      font-size:13px;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+
+      h1{
+        font-size:42px;
+      }
+
+      .hero-left{
+        min-height:auto;
+      }
+    }
+
+    @media (max-width: 640px){
+      .hero-content{
+        padding:28px 20px;
+      }
+
+      .login-card{
+        padding:22px 18px;
+      }
+
+      h1{
+        font-size:34px;
+      }
+
+      .brand-text strong{
+        font-size:20px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <div class="brand-badge">JR</div>
+        <div class="brand-text">
+          <small>Área do aluno</small>
+          <strong>JR Apostilas</strong>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<header>
-<div class="logo">JR Apostilas</div>
-</header>
+  <main class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <section class="hero-card hero-left">
+          <div class="hero-content">
+            <div class="pill">🏥 Plataforma temática da saúde • SESAU 2026</div>
+            <h1>Entre na sua plataforma de estudos</h1>
+            <p>
+              Videoaulas, materiais em PDF e conteúdos organizados em um ambiente simples,
+              bonito e profissional para acompanhar sua preparação.
+            </p>
 
-<section class="hero">
-<h1>Plataforma Completa SESAU</h1>
-<p>Estude com videoaulas + materiais organizados para aprovação</p>
-</section>
+            <div class="hero-points">
+              <div class="hero-point">
+                <strong>Português com aula e PDFs</strong>
+                <span>Liberado</span>
+              </div>
+              <div class="hero-point">
+                <strong>Raciocínio Lógico com material completo</strong>
+                <span>Liberado</span>
+              </div>
+              <div class="hero-point">
+                <strong>SUS / Saúde com foco em concurso</strong>
+                <span>Liberado</span>
+              </div>
+              <div class="hero-point">
+                <strong>Informática com apoio em videoaula</strong>
+                <span>Liberado</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-<div class="container">
+        <section class="hero-card login-card">
+          <h2>Acessar plataforma</h2>
+          <p>
+            Faça seu acesso para entrar na área de estudos da JR Apostilas.
+          </p>
 
-<div class="grid">
+          <form class="form" id="loginForm">
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" placeholder="Digite seu e-mail" required />
+            </div>
 
-<!-- PORTUGUÊS -->
-<div class="card">
-<h2>Português</h2>
+            <div class="field">
+              <label for="senha">Senha</label>
+              <input type="password" id="senha" placeholder="Digite sua senha" required />
+            </div>
 
-<iframe class="video"
-src="https://www.youtube.com/embed/22iA3PPjr7c"></iframe>
+            <div class="error" id="errorBox">
+              Senha incorreta. Tente novamente.
+            </div>
 
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-principais-topicos.pdf" target="_blank">📄 Principais tópicos</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-mapa-mental.pdf" target="_blank">📄 Mapa mental</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-redacao-nota-100.pdf" target="_blank">📄 Redação</a>
+            <button type="submit" class="btn btn-primary">Entrar na plataforma</button>
+          </form>
 
-</div>
+          <div class="mini-box">
+            <strong>Conhecimentos específicos</strong>
+            <span>
+              Os conteúdos específicos por cargo são enviados de forma personalizada,
+              conforme a necessidade de cada aluno.
+            </span>
+          </div>
 
-<!-- RACIOCÍNIO -->
-<div class="card">
-<h2>Raciocínio Lógico</h2>
+          <div class="login-note">
+            Após o pagamento, o aluno recebe o acesso para entrar na área de estudos.
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
 
-<iframe class="video"
-src="https://www.youtube.com/embed/h4ec__8WOp0"></iframe>
+  <div class="footer">
+    JR Apostilas © 2026 • Plataforma de estudos
+  </div>
 
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-apostila.pdf" target="_blank">📄 Apostila</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-mapas-mentais.pdf" target="_blank">📄 Mapas mentais</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/raciocinio-logico-simulados.pdf" target="_blank">📄 Simulados</a>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const errorBox = document.getElementById('errorBox');
 
-</div>
+    // TROQUE A SENHA AQUI
+    const SENHA_CORRETA = "jr2026";
 
-<!-- SUS -->
-<div class="card">
-<h2>SUS (Saúde)</h2>
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-<iframe class="video"
-src="https://www.youtube.com/embed/gV7gjHEmDyc"></iframe>
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value.trim();
 
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-1000-questoes.pdf" target="_blank">📄 1000 Questões</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/sus-legislacao.pdf" target="_blank">📄 Legislação</a>
+      if (!email) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = 'Preencha seu e-mail para continuar.';
+        return;
+      }
 
-</div>
-
-<!-- INFORMÁTICA -->
-<div class="card">
-<h2>Informática</h2>
-
-<iframe class="video"
-src="https://www.youtube.com/embed/cYqTVCrED_s"></iframe>
-
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-criptografia-e-backup.pdf" target="_blank">📄 Criptografia</a>
-<a class="btn" href="https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/informatica-malware-e-ataques.pdf" target="_blank">📄 Malware</a>
-
-</div>
-
-</div>
-
-</div>
-
+      if (senha === SENHA_CORRETA) {
+        localStorage.setItem('jr_apostilas_logado', 'true');
+        localStorage.setItem('jr_apostilas_email', email);
+        window.location.href = 'plataforma.html';
+      } else {
+        errorBox.style.display = 'block';
+        errorBox.textContent = 'Senha incorreta. Tente novamente.';
+      }
+    });
+  </script>
 </body>
-</html>
+</html
