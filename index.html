@@ -832,7 +832,7 @@
 
               <div class="error" id="errorBox">Senha incorreta. Tente novamente.</div>
 
-              <button type="submit" class="btn btn-primary">Entrar na plataforma</button>
+             n><button type="button" class="btn btn-primary" onclick="login()">Entrar na plataforma</button>
             </form>
 
             <div class="mini-box">
@@ -948,20 +948,52 @@
     </footer>
   </div>
 
-  <script>
-    const SENHA_CORRETA = "jr2026";
+ <script>
+  const SENHA_CORRETA = "jr2026";
 
-    const data = [
-      {
-        id: "portugues",
-        icon: "📘",
-        title: "Português",
-        desc: "Mapas mentais, tópicos principais, redação e videoaula em um só lugar.",
-        badge: "Vídeo + PDFs",
-        embed: "22iA3PPjr7c",
-        openVideo: "https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3",
-        lessons: [
-          { icon:"🎥", title:"Videoaula principal de Português", note:"Aula liberada", url:"https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3" }
-        ],
-        pdfs: [
-          { icon:"📄", title:"Principais tópicos", note
+  const loginPage = document.getElementById("loginPage");
+  const platformPage = document.getElementById("platformPage");
+  const errorBox = document.getElementById("errorBox");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const welcomeText = document.getElementById("welcomeText");
+  const modulesContainer = document.getElementById("modulesContainer");
+
+  const data = [
+    {
+      id: "portugues",
+      icon: "📘",
+      title: "Português",
+      desc: "Mapas mentais, tópicos principais, redação e trilha de reforço focada em Consulplan.",
+      badge: "10 aulas + PDFs",
+      embed: "22iA3PPjr7c",
+      openVideo: "https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3",
+      lessons: [
+        { icon:"🎥", title:"Aula 1 — Português base", note:"Sua aula principal", url:"https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3" },
+        { icon:"🎥", title:"Aula 2 — Revisão completa Consulplan", note:"Revisão focada", url:"https://www.youtube.com/watch?v=KZcGttByO5E" },
+        { icon:"🎥", title:"Aula 3 — Questões Consulplan 2025", note:"Resolução comentada", url:"https://www.youtube.com/watch?v=uhb_oSErmig" },
+        { icon:"🎥", title:"Aula 4 — Top 10 Consulplan", note:"Treino direcionado", url:"https://www.youtube.com/watch?v=aLlT8aT_z7I" },
+        { icon:"🎥", title:"Aula 5 — Série Consulplan", note:"Playlist com 9 vídeos", url:"https://www.youtube.com/playlist?list=PLuxfznmOlZnnZsjesORBbAxdI7GURZE5_" },
+        { icon:"🎥", title:"Aula 6 — Trilho Consulplan 2025", note:"Playlist temática", url:"https://www.youtube.com/playlist?list=PLMY4hOPmSLvSwSs6EplyyLuDnNNznLSX1" },
+        { icon:"🎥", title:"Aula 7 — Questões Consulplan extra", note:"Playlist complementar", url:"https://www.youtube.com/playlist?list=PLa5pAYgx6pBqBigmazMBAFUFWitRpHhe5" },
+        { icon:"🎥", title:"Aula 8 — Questões instituto Consulplan", note:"Playlist complementar", url:"https://www.youtube.com/playlist?list=PLOWlxP1PbOtEx52hfbpdGZ5Y907mVYm0t" },
+        { icon:"🎥", title:"Aula 9 — Reforço Consulplan", note:"Voltar na série principal", url:"https://www.youtube.com/playlist?list=PLuxfznmOlZnnZsjesORBbAxdI7GURZE5_" },
+        { icon:"🎥", title:"Aula 10 — Fechamento do bloco", note:"Playlist Consulplan 2025", url:"https://www.youtube.com/playlist?list=PLMY4hOPmSLvSwSs6EplyyLuDnNNznLSX1" }
+      ],
+      pdfs: [
+        { icon:"📄", title:"Principais tópicos", note:"Resumo dos pontos principais", url:"https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-principais-topicos.pdf" },
+        { icon:"🧠", title:"Mapa mental", note:"Fixação visual rápida", url:"https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-mapa-mental.pdf" },
+        { icon:"✍️", title:"Redação nota 100", note:"Apoio para redação", url:"https://raw.githubusercontent.com/jerrymarth10-del/sesau-2026/main/portugues-redacao-nota-100.pdf" }
+      ]
+    },
+    {
+      id: "rlm",
+      icon: "🧮",
+      title: "Raciocínio Lógico",
+      desc: "Apostila, mapas mentais, simulados e trilhas focadas em Consulplan.",
+      badge: "10 aulas + PDFs",
+      embed: "h4ec__8WOp0",
+      openVideo: "https://www.youtube.com/live/h4ec__8WOp0?si=6XPc3JYLsGaBxusV",
+      lessons: [
+        { icon:"🎥", title:"Aula 1 — Raciocínio lógico base", note:"Sua aula principal", url:"https://www.youtube.com/live/h4ec__8WOp0?si=6XPc3JYLsGaBxusV" },
+        { icon:"🎥", title:"Aula 2 — 200 questões Consulplan", note:"Playlist com 16 vídeos", url:"https://www.youtube.com/playlist?list=PLkR-RQjzDGjg4KPw_WUcfqLBlGjSzZC7-" },
+        { icon:"🎥", title:"
