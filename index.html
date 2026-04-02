@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JR Apostilas | Plataforma Premium SESAU</title>
-  <meta name="description" content="Plataforma JR Apostilas com login visual, videoaulas e PDFs para concursos da área da saúde." />
+  <title>JR Apostilas | Plataforma Premium SESAU + Quiz</title>
+  <meta name="description" content="Plataforma JR Apostilas com login visual, videoaulas, PDFs e quizzes por matéria para concursos da área da saúde." />
   <style>
     :root{
       --bg:#07141a;
@@ -505,14 +505,14 @@
       align-items:start;
     }
 
-    .video-wrap, .materials-panel{
+    .video-wrap, .materials-panel, .quiz-panel{
       background:rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.06);
       border-radius:22px;
       overflow:hidden;
     }
 
-    .video-head, .materials-head{
+    .video-head, .materials-head, .quiz-head{
       padding:14px 16px;
       display:flex;
       align-items:center;
@@ -634,6 +634,146 @@
       flex-shrink:0;
     }
 
+    .quiz-panel{
+      grid-column:1 / -1;
+    }
+
+    .quiz-shell{
+      padding:18px;
+    }
+
+    .quiz-intro{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    }
+
+    .quiz-intro p{
+      color:var(--muted);
+      font-size:14px;
+      max-width:780px;
+      line-height:1.6;
+    }
+
+    .quiz-box{
+      margin-top:16px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .quiz-progress-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+      font-size:14px;
+      font-weight:700;
+      color:#d9f3f8;
+    }
+
+    .quiz-bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.08);
+      margin-bottom:18px;
+    }
+
+    .quiz-bar-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--green), var(--blue));
+      transition:.25s ease;
+    }
+
+    .quiz-question{
+      font-size:22px;
+      line-height:1.5;
+      margin-bottom:16px;
+    }
+
+    .quiz-options{
+      display:grid;
+      gap:12px;
+    }
+
+    .quiz-option{
+      width:100%;
+      text-align:left;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .quiz-option:hover{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(56,189,248,.35);
+    }
+
+    .quiz-option.correct{
+      border-color:rgba(34,197,94,.5);
+      background:rgba(34,197,94,.14);
+    }
+
+    .quiz-option.wrong{
+      border-color:rgba(239,68,68,.5);
+      background:rgba(239,68,68,.14);
+    }
+
+    .quiz-feedback{
+      margin-top:16px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dbeafe;
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .quiz-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .quiz-result{
+      margin-top:16px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(56,189,248,.08), rgba(34,197,94,.07));
+    }
+
+    .quiz-result h4{
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .quiz-result p{
+      line-height:1.7;
+      color:#e8f2f5;
+      font-size:16px;
+    }
+
     .specific-box{
       background:linear-gradient(135deg, #0f172a, #0b2440);
       border:1px solid rgba(255,255,255,.1);
@@ -715,6 +855,7 @@
       }
       .module-copy h3{font-size:24px}
       .specific-box{padding:24px 18px}
+      .quiz-question{font-size:19px}
     }
   </style>
 </head>
@@ -745,10 +886,10 @@
               </p>
 
               <div class="hero-points">
-                <div class="hero-point"><strong>Português com 10 aulas + PDFs</strong><span>Liberado</span></div>
-                <div class="hero-point"><strong>Raciocínio Lógico com 10 aulas + PDFs</strong><span>Liberado</span></div>
-                <div class="hero-point"><strong>SUS / Saúde com 10 aulas + PDFs</strong><span>Liberado</span></div>
-                <div class="hero-point"><strong>Informática com 10 aulas + PDFs</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>Português com 10 aulas + PDFs + Quiz</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>Raciocínio Lógico com 10 aulas + PDFs + Quiz</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>SUS / Saúde com 10 aulas + PDFs + Quiz</strong><span>Liberado</span></div>
+                <div class="hero-point"><strong>Informática com 10 aulas + PDFs + Quiz</strong><span>Liberado</span></div>
               </div>
             </div>
           </section>
@@ -818,8 +959,8 @@
               <div class="pill">🏥 Plataforma temática da saúde • SESAU 2026</div>
               <h1>Bem-vindo à sua área de estudos</h1>
               <p>
-                Videoaulas e materiais em PDF organizados por disciplina, com trilhas extras
-                para Consulplan, SUS e saúde pública.
+                Videoaulas, materiais em PDF e quizzes organizados por disciplina,
+                com trilhas extras para Consulplan, SUS e saúde pública.
               </p>
               <div class="welcome" id="welcomeText">Acesso liberado</div>
             </div>
@@ -833,8 +974,8 @@
             <small>Conteúdo liberado</small>
             <h2>Disciplinas disponíveis</h2>
             <p>
-              Cada bloco abaixo reúne uma aula principal incorporada, uma trilha com 10 aulas
-              e os PDFs da mesma matéria.
+              Cada bloco abaixo reúne uma aula principal incorporada, uma trilha com 10 aulas,
+              os PDFs da mesma matéria e um quiz com 20 questões.
             </p>
           </div>
 
@@ -883,12 +1024,103 @@
     </main>
 
     <footer>
-      <p>JR Apostilas © 2026 | Plataforma organizada com videoaulas e PDFs para concursos da área da saúde.</p>
+      <p>JR Apostilas ©️ 2026 | Plataforma organizada com videoaulas, PDFs e quizzes por matéria.</p>
     </footer>
   </div>
 
   <script>
     const SENHA_CORRETA = "jr2026";
+
+    const quizBank = {
+      portugues: [
+        {q:"Assinale a alternativa em que o uso da crase está correto.", o:["Entreguei o recurso a candidata.","Entreguei o recurso à candidata.","Entreguei o recurso à uma candidata.","Entreguei o recurso a à candidata."], a:1, e:"Há fusão da preposição exigida pelo verbo com o artigo feminino que acompanha 'candidata': à candidata."},
+        {q:"Em 'Faz cinco anos que estudo para concursos', o verbo 'fazer' está:", o:["corretamente no singular, por indicar tempo decorrido.","incorreto, pois deveria estar no plural.","correto apenas na linguagem coloquial.","incorreto, pois deveria estar no infinitivo."], a:0, e:"Quando indica tempo decorrido, 'fazer' é impessoal e fica no singular."},
+        {q:"Assinale a frase em que a concordância verbal está correta.", o:["Houveram diversas reclamações sobre o edital.","Devem haver vagas remanescentes.","Existem candidatos muito preparados.","Fazem dois meses da publicação."], a:2, e:"O verbo 'existir' concorda normalmente com o sujeito: existem candidatos."},
+        {q:"Na frase 'Os fiscais chegaram cedo, porém saíram tarde', a conjunção destacada expressa:", o:["adição","explicação","oposição","conclusão"], a:2, e:"'Porém' é conjunção adversativa e exprime oposição."},
+        {q:"Assinale a alternativa em que todas as palavras estão grafadas corretamente.", o:["Exceção, privilégio, empecilho","Excessão, privilégio, empecilho","Exceção, previlégio, empecilho","Exceção, privilégio, impecilho"], a:0, e:"A grafia correta é: exceção, privilégio e empecilho."},
+        {q:"Em qual alternativa o pronome oblíquo está empregado de acordo com a norma-padrão?", o:["Me informaram o resultado ontem.","Informaram-me o resultado ontem.","Me disseram que faltou um documento.","Me entregaram o comprovante."], a:1, e:"Em contexto formal, com o verbo iniciando a oração, prefere-se 'informaram-me'."},
+        {q:"A regência verbal está correta em:", o:["Assisti o filme ontem.","Aspiro um cargo público.","Prefiro mais estudar a descansar.","Cheguei no local da prova cedo."], a:1, e:"No sentido de desejar, 'aspirar' é transitivo direto: aspirar um cargo."},
+        {q:"Assinale a alternativa em que o acento indicativo de crase é facultativo.", o:["Refiro-me àquela candidata.","Entreguei a prova à diretora.","Escrevi a carta à minha irmã.","Cheguei à escola cedo."], a:2, e:"Antes de pronome possessivo feminino singular, o uso da crase pode ser facultativo: à/minha irmã."},
+        {q:"Na expressão 'É proibida a entrada', a concordância nominal ocorre porque:", o:["o adjetivo sempre concorda com o artigo.","há artigo determinando o substantivo feminino.","'proibida' é invariável nesse caso.","o verbo exige concordância feminina."], a:1, e:"Com artigo determinado ('a entrada'), o predicativo concorda: proibida."},
+        {q:"Assinale a alternativa em que a pontuação está correta.", o:["Os candidatos que chegaram atrasados, não fizeram a prova.","Os candidatos, que chegaram atrasados, não fizeram a prova.","Os candidatos que chegaram atrasados não fizeram a prova.","Os candidatos que chegaram, atrasados não fizeram a prova."], a:2, e:"A oração restritiva 'que chegaram atrasados' não deve vir isolada por vírgulas."},
+        {q:"Em 'Necessitam-se de voluntários', a construção está:", o:["correta, pois o verbo concorda com 'voluntários'.","incorreta, pois o verbo deveria ficar no singular.","incorreta, pois o 'se' não é apassivador nessa regência.","correta apenas em linguagem jurídica."], a:2, e:"Quem necessita, necessita de algo. O verbo é transitivo indireto; portanto, não há voz passiva sintética."},
+        {q:"Assinale a alternativa em que o pronome relativo foi empregado corretamente.", o:["O livro onde comprei era caro.","A cidade cuja visitei é antiga.","O candidato a que me referi foi aprovado.","A prova que gabarito saiu cedo."], a:2, e:"Quem se refere, refere-se a alguém/algo: 'o candidato a que me referi'."},
+        {q:"A oração 'caso o candidato seja aprovado' expressa ideia de:", o:["causa","condição","consequência","concessão"], a:1, e:"A conjunção 'caso' introduz oração subordinada adverbial condicional."},
+        {q:"Em qual alternativa há erro de colocação pronominal?", o:["Nunca me disseram a verdade.","Quando se encerrou a prova, saí.","Tudo me foi entregue.","Não disseram-me o motivo."], a:3, e:"Com palavra negativa ('não'), exige-se próclise: não me disseram."},
+        {q:"O plural de 'decreto-lei' é:", o:["decretos-lei","decreto-leis","decretos-leis","decreto-lei"], a:0, e:"Nos compostos ligados por justaposição, flexiona-se o primeiro elemento: decretos-lei."},
+        {q:"Assinale a opção em que a palavra 'se' é índice de indeterminação do sujeito.", o:["Vendem-se apostilas.","Precisa-se de candidatos experientes.","Alugam-se salas para eventos.","Resolvem-se questões diariamente."], a:1, e:"Com verbo transitivo indireto ('precisar de'), o 'se' indetermina o sujeito."},
+        {q:"Na frase 'A maioria dos candidatos faltou', o verbo está:", o:["obrigatoriamente no plural.","corretamente no singular.","incorreto, pois deveria concordar com 'candidatos'.","correto apenas se houver numeral."], a:1, e:"Com expressões partitivas, a concordância pode ocorrer com o núcleo singular: a maioria faltou."},
+        {q:"Assinale a alternativa em que há erro de regência nominal.", o:["Ele estava apto ao cargo.","Tenho aversão a mentiras.","Ela é favorável de mudanças.","O servidor é responsável por documentos."], a:2, e:"O correto é 'favorável a mudanças'."},
+        {q:"Em 'Embora estivesse cansado, continuou estudando', a oração destacada indica:", o:["conclusão","concessão","proporção","explicação"], a:1, e:"'Embora' introduz oração subordinada adverbial concessiva."},
+        {q:"Assinale a alternativa em que o verbo está empregado corretamente quanto à ortografia.", o:["Se ele intervir, resolverá o problema.","Se ele interver, resolverá o problema.","Quando eu reaver os documentos, aviso.","Se ele manter a calma, vencerá."], a:0, e:"Em uso formal, prefira construções corretas do verbo intervir. Esta questão pode ser refinada depois, se você quiser deixar ainda mais forte."}
+      ],
+      rlm: [
+        {q:"Se todo guarda municipal é servidor público e todo servidor público está sujeito a normas administrativas, então:", o:["todo guarda municipal está sujeito a normas administrativas.","todo servidor público é guarda municipal.","algum guarda municipal não é servidor público.","nenhum guarda municipal está sujeito a normas administrativas."], a:0, e:"Pela transitividade lógica: se A → B e B → C, então A → C."},
+        {q:"A negação da proposição 'Todos os candidatos foram aprovados' é:", o:["Nenhum candidato foi aprovado.","Algum candidato não foi aprovado.","Todos os candidatos não foram aprovados.","Alguns candidatos foram aprovados."], a:1, e:"A negação de 'todo' é 'existe pelo menos um ... não'."},
+        {q:"Qual é o próximo termo da sequência 2, 6, 18, 54, ...?", o:["72","81","108","162"], a:3, e:"Cada termo é o triplo do anterior."},
+        {q:"A proposição 'Se estudo, então passo' é logicamente equivalente a:", o:["Se passo, então estudo.","Se não estudo, então não passo.","Se não passo, então não estudo.","Estudo e passo."], a:2, e:"A contrapositiva é equivalente: se não passo, então não estudo."},
+        {q:"Em uma sala com 40 pessoas, 30% faltaram. Quantas compareceram?", o:["10","12","26","28"], a:3, e:"30% de 40 = 12 faltas; 40 - 12 = 28 presentes."},
+        {q:"Se hoje é quarta-feira, daqui a 17 dias será:", o:["sexta-feira","sábado","domingo","segunda-feira"], a:1, e:"17 dias equivalem a 14 + 3. Três dias após quarta-feira é sábado."},
+        {q:"Considere a sequência 1, 1, 2, 3, 5, 8, ... O próximo termo é:", o:["10","11","12","13"], a:3, e:"Cada termo é a soma dos dois anteriores: 5 + 8 = 13."},
+        {q:"Uma proposição é uma sentença:", o:["sempre interrogativa.","sempre aberta.","que pode ser julgada verdadeira ou falsa.","que possui sujeito e predicado, apenas."], a:2, e:"Em lógica, proposição é toda sentença declarativa com valor lógico definido."},
+        {q:"Se A é verdadeira e B é falsa, o valor lógico de 'A e B' é:", o:["verdadeiro","falso","indeterminado","contingente"], a:1, e:"Na conjunção, basta uma parte falsa para o resultado ser falso."},
+        {q:"Qual alternativa representa uma tautologia?", o:["p ∧ ~p","p ∨ ~p","p → ~p","~(p ∨ p)"], a:1, e:"'p ou não p' é sempre verdadeira."},
+        {q:"Em uma turma, 18 gostam de português, 12 de matemática e 5 de ambas. Quantos gostam de pelo menos uma das duas matérias?", o:["25","30","35","7"], a:0, e:"Aplicando inclusão-exclusão: 18 + 12 - 5 = 25."},
+        {q:"A negação de 'João estuda e Maria trabalha' é:", o:["João não estuda e Maria não trabalha.","João não estuda ou Maria não trabalha.","João estuda ou Maria trabalha.","João não estuda ou Maria trabalha."], a:1, e:"Negação da conjunção: ~(p ∧ q) ≡ ~p ∨ ~q."},
+        {q:"Se 5 máquinas fazem 5 provas em 5 minutos, 10 máquinas fazem 10 provas em 10 minutos?", o:["5","10","20","25"], a:2, e:"Cada máquina faz 1 prova em 5 minutos; em 10 minutos, cada uma faz 2 provas. Com 10 máquinas, são 20 provas."},
+        {q:"A sequência 7, 14, 28, 56, ... segue qual padrão?", o:["soma 7","multiplica por 2","multiplica por 3","subtrai 7"], a:1, e:"Cada termo é o dobro do anterior."},
+        {q:"Em um teste com 50 questões, Ana acertou 80%. Quantas acertou?", o:["30","35","40","45"], a:2, e:"80% de 50 = 40."},
+        {q:"No argumento 'Se chove, a rua molha. Chove. Logo, a rua molha.', o nome da regra é:", o:["modus tollens","silogismo disjuntivo","modus ponens","falácia da afirmação do consequente"], a:2, e:"A estrutura é p→q; p; logo q, isto é, modus ponens."},
+        {q:"Qual é a média aritmética de 6, 8, 10 e 16?", o:["9","10","11","12"], a:1, e:"Soma 40; dividido por 4 = 10."},
+        {q:"A negação de 'Existe pelo menos um servidor aprovado' é:", o:["Todos os servidores foram aprovados.","Nenhum servidor foi aprovado.","Algum servidor não foi aprovado.","Existe exatamente um servidor aprovado."], a:1, e:"Negação de 'existe pelo menos um' é 'nenhum'."},
+        {q:"Se 3 candidatos fazem uma prova em 2 horas, em condições idênticas, 6 candidatos farão a mesma prova em:", o:["1 hora","2 horas","3 horas","4 horas"], a:1, e:"O tempo da prova não depende do número de candidatos, e sim da duração da prova."},
+        {q:"Um item custa R$ 200,00 e sofreu desconto de 15%. O novo valor é:", o:["R$ 170,00","R$ 175,00","R$ 180,00","R$ 185,00"], a:0, e:"15% de 200 = 30; logo, 200 - 30 = 170."}
+      ],
+      informatica: [
+        {q:"Qual componente executa a maior parte do processamento do computador?", o:["SSD","CPU","RAM","placa de vídeo"], a:1, e:"A CPU é a unidade central de processamento."},
+        {q:"No Windows, o atalho Ctrl + C serve para:", o:["colar","copiar","recortar","selecionar tudo"], a:1, e:"Ctrl + C é o atalho padrão para copiar."},
+        {q:"Qual das opções é um navegador de internet?", o:["Excel","Google Chrome","PowerPoint","Word"], a:1, e:"Google Chrome é navegador web."},
+        {q:"A memória RAM é utilizada para:", o:["armazenamento permanente de arquivos.","execução temporária de programas e dados.","resfriamento do processador.","controle de energia da placa-mãe."], a:1, e:"RAM é memória volátil, usada temporariamente durante a execução."},
+        {q:"Um phishing busca, em geral:", o:["melhorar o desempenho do computador.","capturar dados do usuário por fraude.","criptografar backups de segurança.","atualizar drivers automaticamente."], a:1, e:"Phishing tenta enganar o usuário para obter senhas, dados bancários e outras informações."},
+        {q:"Em segurança da informação, backup significa:", o:["apagar arquivos duplicados.","copiar dados para recuperação futura.","compactar automaticamente o sistema.","bloquear o acesso à rede."], a:1, e:"Backup é a cópia de segurança de dados para restauração posterior."},
+        {q:"Qual extensão está mais associada a uma planilha do Excel moderno?", o:[".docx",".xlsx",".pptx",".pdf"], a:1, e:"Arquivos do Excel usam, em geral, a extensão .xlsx."},
+        {q:"No correio eletrônico, o campo CCo significa:", o:["cópia comum obrigatória.","cópia criptografada oculta.","cópia carbono oculta.","contato com cópia online."], a:2, e:"CCo é cópia carbono oculta."},
+        {q:"Um sistema operacional é responsável por:", o:["editar apenas textos.","gerenciar hardware e software do computador.","servir somente para navegar na internet.","substituir aplicativos de escritório."], a:1, e:"O sistema operacional faz a ponte entre hardware, aplicativos e usuário."},
+        {q:"O protocolo HTTPS indica, em geral:", o:["site sem estrutura.","comunicação segura com criptografia.","arquivo local compartilhado.","navegação off-line."], a:1, e:"HTTPS utiliza camada de segurança para proteger a comunicação."},
+        {q:"Qual dispositivo é considerado de entrada?", o:["monitor","impressora","teclado","caixa de som"], a:2, e:"Teclado é dispositivo de entrada de dados."},
+        {q:"Na lixeira do Windows, ao restaurar um arquivo, ele:", o:["é apagado permanentemente.","volta para o local de origem.","vai para a área de trabalho.","é convertido em atalho."], a:1, e:"A restauração devolve o arquivo ao caminho original."},
+        {q:"Malware é um termo usado para:", o:["programa mal escrito apenas.","software malicioso.","equipamento defeituoso.","arquivo compactado."], a:1, e:"Malware é software criado com finalidade maliciosa."},
+        {q:"Qual alternativa aumenta a segurança de uma conta online?", o:["usar a mesma senha em todos os serviços.","compartilhar senha com colegas.","habilitar verificação em duas etapas.","anotar senha em local público."], a:2, e:"A verificação em duas etapas adiciona uma camada extra de proteção."},
+        {q:"No Word, o atalho Ctrl + Z normalmente:", o:["salva o arquivo.","refaz a última ação.","desfaz a última ação.","fecha o documento."], a:2, e:"Ctrl + Z desfaz a última ação executada."},
+        {q:"Em redes, o roteador é usado principalmente para:", o:["imprimir arquivos da rede.","ligar diferentes redes e distribuir conexão.","aumentar a memória RAM.","substituir o sistema operacional."], a:1, e:"O roteador interliga redes e encaminha pacotes."},
+        {q:"Spam corresponde, em geral, a:", o:["mensagem eletrônica não solicitada.","falha física do teclado.","erro de impressão.","tipo de antivírus."], a:0, e:"Spam são mensagens indesejadas, geralmente enviadas em massa."},
+        {q:"Qual serviço é exemplo típico de armazenamento em nuvem?", o:["Google Drive","Bloco de Notas","Paint","Calculadora"], a:0, e:"Google Drive é serviço de armazenamento e sincronização em nuvem."},
+        {q:"A principal função do antivírus é:", o:["editar documentos PDF.","detectar e ajudar a remover códigos maliciosos.","aumentar a velocidade da internet.","substituir o firewall de rede em qualquer cenário."], a:1, e:"Antivírus atua na detecção, bloqueio e remoção de ameaças."},
+        {q:"Qual combinação representa um endereço de site válido?", o:["htp//meusite","www.exemplo.com","mail@@site","C:\\arquivos\\site"], a:1, e:"'www.exemplo.com' representa o formato típico de endereço web."}
+      ],
+      sus: [
+        {q:"A Lei nº 8.080/1990 dispõe sobre:", o:["o regime jurídico dos servidores.","as condições para promoção da saúde e a organização dos serviços correspondentes.","o processo penal brasileiro.","o estatuto da cidade."], a:1, e:"A Lei 8.080 trata da organização e funcionamento do SUS."},
+        {q:"Constitui princípio doutrinário do SUS:", o:["centralização rígida","universalidade","privatização compulsória","segregação do acesso"], a:1, e:"Universalidade, integralidade e equidade são princípios doutrinários do SUS."},
+        {q:"A participação da comunidade no SUS é reforçada pela Lei:", o:["8.666/1993","8.142/1990","9.394/1996","13.709/2018"], a:1, e:"A Lei 8.142/1990 trata, entre outros pontos, da participação da comunidade e transferências intergovernamentais."},
+        {q:"A integralidade da assistência significa:", o:["atendimento apenas hospitalar.","conjunto articulado e contínuo de ações preventivas e curativas.","prioridade exclusiva a casos graves.","atuação somente dos municípios."], a:1, e:"Integralidade envolve promoção, prevenção, tratamento e reabilitação."},
+        {q:"A direção do SUS é única em cada esfera de governo. No âmbito dos municípios, ela é exercida por:", o:["Ministério da Saúde","Secretaria Municipal de Saúde ou órgão equivalente","Conselho Nacional de Saúde","Tribunal de Contas"], a:1, e:"Em cada esfera há direção única; no município, pela secretaria municipal de saúde ou equivalente."},
+        {q:"O controle social no SUS ocorre, principalmente, por meio de:", o:["delegacias especializadas","conselhos e conferências de saúde","cartórios e fóruns","somente ouvidorias privadas"], a:1, e:"Conselhos e conferências são espaços formais de participação da comunidade."},
+        {q:"A equidade no SUS busca:", o:["tratar todos exatamente da mesma forma, sem considerar necessidades.","distribuir recursos e ações conforme as necessidades de cada grupo.","restringir o acesso apenas a contribuintes.","substituir a universalidade."], a:1, e:"Equidade é tratar desigualmente os desiguais, conforme necessidades."},
+        {q:"A regionalização da saúde tem como objetivo:", o:["eliminar a atenção básica.","organizar ações e serviços em territórios integrados.","concentrar todo atendimento na capital.","extinguir os municípios."], a:1, e:"A regionalização organiza redes e fluxos assistenciais entre territórios."},
+        {q:"A Estratégia Saúde da Família é porta de entrada prioritária de qual nível de atenção?", o:["alta complexidade","atenção primária","atenção terciária","atenção pericial"], a:1, e:"A ESF integra a atenção primária à saúde."},
+        {q:"A vigilância epidemiológica tem por finalidade:", o:["somente registrar nascimentos.","detectar e prevenir mudanças nos fatores determinantes e condicionantes de saúde.","substituir a atenção hospitalar.","realizar auditoria financeira."], a:1, e:"A vigilância epidemiológica acompanha eventos e agravos para orientar medidas de controle."},
+        {q:"Entre as diretrizes do SUS previstas na Constituição, está:", o:["atendimento restrito aos segurados.","descentralização com direção única em cada esfera.","cobrança obrigatória dos usuários.","eliminação da participação popular."], a:1, e:"A Constituição prevê descentralização, atendimento integral e participação da comunidade."},
+        {q:"A Política Nacional de Humanização valoriza:", o:["fragmentação do cuidado.","vínculo, acolhimento e protagonismo dos sujeitos.","distanciamento entre equipe e usuário.","atendimento exclusivamente automatizado."], a:1, e:"A PNH enfatiza acolhimento, escuta qualificada, corresponsabilização e vínculo."},
+        {q:"A Lei 8.142/1990 determina que as conferências de saúde ocorram, em regra:", o:["mensalmente","a cada dois anos","a cada quatro anos","apenas quando o gestor desejar"], a:2, e:"As conferências de saúde reúnem-se a cada quatro anos, em regra."},
+        {q:"No SUS, a universalidade significa:", o:["acesso somente a brasileiros natos.","acesso de todos às ações e serviços de saúde.","atendimento apenas a quem contribui.","atendimento exclusivo em urgência."], a:1, e:"Universalidade garante acesso de todos ao sistema."},
+        {q:"A descentralização do SUS implica:", o:["concentração de todas as decisões na União.","repartição de responsabilidades entre os entes federativos.","extinção dos estados na gestão da saúde.","subordinação do município ao setor privado."], a:1, e:"União, estados e municípios compartilham competências na gestão do SUS."},
+        {q:"O Conselho de Saúde possui caráter:", o:["temporário e consultivo apenas.","permanente e deliberativo.","judicial e punitivo.","privado e empresarial."], a:1, e:"Os conselhos de saúde são permanentes e deliberativos."},
+        {q:"A integralidade da assistência inclui:", o:["somente tratamento medicamentoso.","ações de promoção, proteção e recuperação da saúde.","apenas internações e cirurgias.","exclusivamente campanhas educativas."], a:1, e:"Integralidade abrange ações articuladas de várias naturezas."},
+        {q:"Uma rede de atenção à saúde busca:", o:["isolar serviços sem comunicação.","integrar ações e serviços com continuidade do cuidado.","reduzir a atenção básica.","atuar apenas em capitais."], a:1, e:"As redes articulam pontos de atenção e garantem cuidado contínuo."},
+        {q:"No financiamento do SUS, os recursos são provenientes:", o:["somente da União.","somente dos municípios.","do orçamento da seguridade social, entre outras fontes, com participação dos entes federativos.","apenas de taxas cobradas dos pacientes."], a:2, e:"O financiamento é tripartite, com participação de União, estados e municípios."},
+        {q:"A promoção da saúde tem enfoque principal em:", o:["agir apenas após a doença instalada.","melhorar condições de vida e reduzir vulnerabilidades.","substituir toda assistência curativa.","priorizar só alta complexidade."], a:1, e:"Promoção da saúde atua nos determinantes sociais e nas condições de vida."}
+      ]
+    };
 
     const data = [
       {
@@ -896,9 +1128,10 @@
         icon: "📘",
         title: "Português",
         desc: "Mapas mentais, tópicos principais, redação e trilha de reforço focada em Consulplan.",
-        badge: "10 aulas + PDFs",
+        badge: "10 aulas + PDFs + Quiz",
         embed: "22iA3PPjr7c",
         openVideo: "https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3",
+        quizKey: "portugues",
         lessons: [
           { icon:"🎥", title:"Aula 1 — Português base", note:"Sua aula principal", url:"https://youtu.be/22iA3PPjr7c?si=fwPXpdw4BvfX8Qi3" },
           { icon:"🎥", title:"Aula 2 — Revisão completa Consulplan", note:"Revisão focada", url:"https://www.youtube.com/watch?v=KZcGttByO5E" },
@@ -922,9 +1155,10 @@
         icon: "🧮",
         title: "Raciocínio Lógico",
         desc: "Apostila, mapas mentais, simulados e trilhas focadas em Consulplan.",
-        badge: "10 aulas + PDFs",
+        badge: "10 aulas + PDFs + Quiz",
         embed: "h4ec__8WOp0",
         openVideo: "https://www.youtube.com/live/h4ec__8WOp0?si=6XPc3JYLsGaBxusV",
+        quizKey: "rlm",
         lessons: [
           { icon:"🎥", title:"Aula 1 — Raciocínio lógico base", note:"Sua aula principal", url:"https://www.youtube.com/live/h4ec__8WOp0?si=6XPc3JYLsGaBxusV" },
           { icon:"🎥", title:"Aula 2 — 200 questões Consulplan", note:"Playlist com 16 vídeos", url:"https://www.youtube.com/playlist?list=PLkR-RQjzDGjg4KPw_WUcfqLBlGjSzZC7-" },
@@ -948,9 +1182,10 @@
         icon: "💻",
         title: "Informática",
         desc: "Segurança da informação, backup, criptografia, malware e reforço para concursos.",
-        badge: "10 aulas + PDFs",
+        badge: "10 aulas + PDFs + Quiz",
         embed: "cYqTVCrED_s",
         openVideo: "https://www.youtube.com/live/cYqTVCrED_s?si=CIWM7CjLvLjtDIMy",
+        quizKey: "informatica",
         lessons: [
           { icon:"🎥", title:"Aula 1 — Informática base", note:"Sua aula principal", url:"https://www.youtube.com/live/cYqTVCrED_s?si=CIWM7CjLvLjtDIMy" },
           { icon:"🎥", title:"Aula 2 — Malware e backup", note:"Aula focada em segurança", url:"https://www.youtube.com/watch?v=GO0s1tdAQ1g" },
@@ -973,9 +1208,10 @@
         icon: "🏥",
         title: "SUS / Área da Saúde",
         desc: "Legislação do SUS, saúde pública, PNH, epidemiologia e ESF.",
-        badge: "10 aulas + PDFs",
+        badge: "10 aulas + PDFs + Quiz",
         embed: "gV7gjHEmDyc",
         openVideo: "https://www.youtube.com/live/gV7gjHEmDyc?si=1WbsVkHyyo4WYqS5",
+        quizKey: "sus",
         lessons: [
           { icon:"🎥", title:"Aula 1 — SUS base", note:"Sua aula principal", url:"https://www.youtube.com/live/gV7gjHEmDyc?si=1WbsVkHyyo4WYqS5" },
           { icon:"🎥", title:"Aula 2 — SESAU/RO Legislação do SUS", note:"Aula focada em SESAU/RO", url:"https://www.youtube.com/watch?v=-VU0LVDmpOU" },
@@ -1004,6 +1240,47 @@
     const logoutBtn = document.getElementById("logoutBtn");
     const welcomeText = document.getElementById("welcomeText");
     const modulesContainer = document.getElementById("modulesContainer");
+
+    const quizState = {};
+
+    function quizMarkup(subjectId, quizKey, title){
+      return `
+        <div class="quiz-panel">
+          <div class="quiz-head">
+            <span>🧠 Quiz de ${title}</span>
+            <span>20 questões • correção imediata</span>
+          </div>
+          <div class="quiz-shell">
+            <div class="quiz-intro">
+              <p>
+                Responda questões objetivas inspiradas no estilo de provas de concurso.
+                O aluno vê a explicação logo após cada resposta.
+              </p>
+              <button class="btn btn-primary btn-small" onclick="startQuiz('${subjectId}','${quizKey}')">Começar quiz</button>
+            </div>
+
+            <div id="quiz-box-${subjectId}" class="quiz-box hidden">
+              <div class="quiz-progress-top">
+                <strong id="quiz-title-${subjectId}">Quiz</strong>
+                <span id="quiz-progress-${subjectId}">Questão 1 de 20</span>
+              </div>
+              <div class="quiz-bar">
+                <div id="quiz-bar-${subjectId}" class="quiz-bar-fill"></div>
+              </div>
+              <div id="quiz-question-${subjectId}" class="quiz-question"></div>
+              <div id="quiz-options-${subjectId}" class="quiz-options"></div>
+              <div id="quiz-feedback-${subjectId}" class="quiz-feedback hidden"></div>
+              <div class="quiz-actions">
+                <button class="btn btn-outline btn-small" onclick="closeQuiz('${subjectId}')">Fechar</button>
+                <button id="quiz-next-${subjectId}" class="btn btn-primary btn-small hidden" onclick="nextQuestion('${subjectId}','${quizKey}')">Próxima</button>
+              </div>
+            </div>
+
+            <div id="quiz-result-${subjectId}" class="quiz-result hidden"></div>
+          </div>
+        </div>
+      `;
+    }
 
     function renderModules() {
       modulesContainer.innerHTML = data.map(subject => `
@@ -1077,6 +1354,8 @@
                 </div>
               </div>
             </div>
+
+            ${quizMarkup(subject.id, subject.quizKey, subject.title)}
           </div>
         </article>
       `).join("");
@@ -1123,6 +1402,123 @@
         errorBox.style.display = "block";
         errorBox.textContent = "Senha incorreta. Tente novamente.";
       }
+    }
+
+    function startQuiz(subjectId, quizKey){
+      quizState[subjectId] = { index:0, score:0, answered:false, quizKey };
+      document.getElementById(`quiz-result-${subjectId}`).classList.add("hidden");
+      document.getElementById(`quiz-box-${subjectId}`).classList.remove("hidden");
+      renderQuestion(subjectId);
+      document.getElementById(subjectId).scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    function renderQuestion(subjectId){
+      const state = quizState[subjectId];
+      const quiz = quizBank[state.quizKey];
+      const item = quiz[state.index];
+
+      document.getElementById(`quiz-title-${subjectId}`).textContent = `Quiz • ${findSubjectTitle(subjectId)}`;
+      document.getElementById(`quiz-progress-${subjectId}`).textContent = `Questão ${state.index + 1} de ${quiz.length}`;
+      document.getElementById(`quiz-bar-${subjectId}`).style.width = `${((state.index + 1) / quiz.length) * 100}%`;
+      document.getElementById(`quiz-question-${subjectId}`).textContent = item.q;
+
+      const options = document.getElementById(`quiz-options-${subjectId}`);
+      const feedback = document.getElementById(`quiz-feedback-${subjectId}`);
+      const nextBtn = document.getElementById(`quiz-next-${subjectId}`);
+
+      feedback.classList.add("hidden");
+      feedback.innerHTML = "";
+      nextBtn.classList.add("hidden");
+      options.innerHTML = "";
+      state.answered = false;
+
+      item.o.forEach((text, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.textContent = `${String.fromCharCode(65 + idx)}) ${text}`;
+        btn.onclick = () => selectAnswer(subjectId, idx, btn);
+        options.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(subjectId, selectedIndex, selectedButton){
+      const state = quizState[subjectId];
+      if(state.answered) return;
+
+      state.answered = true;
+      const quiz = quizBank[state.quizKey];
+      const item = quiz[state.index];
+      const options = document.querySelectorAll(`#quiz-options-${subjectId} .quiz-option`);
+      const feedback = document.getElementById(`quiz-feedback-${subjectId}`);
+      const nextBtn = document.getElementById(`quiz-next-${subjectId}`);
+
+      options.forEach((btn, idx) => {
+        btn.disabled = true;
+        if(idx === item.a) btn.classList.add("correct");
+      });
+
+      if(selectedIndex === item.a){
+        state.score++;
+        feedback.innerHTML = `<strong>Resposta correta.</strong><br>${item.e}`;
+      } else {
+        selectedButton.classList.add("wrong");
+        feedback.innerHTML = `<strong>Resposta incorreta.</strong><br>${item.e}`;
+      }
+
+      feedback.classList.remove("hidden");
+      nextBtn.classList.remove("hidden");
+      nextBtn.textContent = state.index === quiz.length - 1 ? "Ver resultado" : "Próxima";
+    }
+
+    function nextQuestion(subjectId){
+      const state = quizState[subjectId];
+      const quiz = quizBank[state.quizKey];
+      if(state.index < quiz.length - 1){
+        state.index++;
+        renderQuestion(subjectId);
+      } else {
+        showResult(subjectId);
+      }
+    }
+
+    function showResult(subjectId){
+      const state = quizState[subjectId];
+      const quiz = quizBank[state.quizKey];
+      const total = quiz.length;
+      const percent = Math.round((state.score / total) * 100);
+
+      document.getElementById(`quiz-box-${subjectId}`).classList.add("hidden");
+      const result = document.getElementById(`quiz-result-${subjectId}`);
+      result.classList.remove("hidden");
+
+      let performance = "";
+      if(percent >= 85){
+        performance = "Excelente resultado. O aluno demonstra domínio forte do conteúdo.";
+      } else if(percent >= 65){
+        performance = "Bom resultado. Vale revisar os pontos errados e refazer o quiz.";
+      } else {
+        performance = "Resultado abaixo do ideal. O melhor caminho é revisar a aula, os PDFs e tentar novamente.";
+      }
+
+      result.innerHTML = `
+        <h4>Resultado final</h4>
+        <p>Você acertou <strong>${state.score} de ${total}</strong> questões em <strong>${findSubjectTitle(subjectId)}</strong>.</p>
+        <p>Aproveitamento: <strong>${percent}%</strong>. ${performance}</p>
+        <div class="quiz-actions">
+          <button class="btn btn-primary btn-small" onclick="startQuiz('${subjectId}','${state.quizKey}')">Refazer quiz</button>
+          <button class="btn btn-outline btn-small" onclick="closeQuiz('${subjectId}')">Fechar</button>
+        </div>
+      `;
+    }
+
+    function closeQuiz(subjectId){
+      document.getElementById(`quiz-box-${subjectId}`).classList.add("hidden");
+      document.getElementById(`quiz-result-${subjectId}`).classList.add("hidden");
+    }
+
+    function findSubjectTitle(subjectId){
+      const item = data.find(x => x.id === subjectId);
+      return item ? item.title : "Quiz";
     }
 
     renderModules();
