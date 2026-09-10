@@ -327,14 +327,37 @@ button{font:inherit}
 
 <style id="jr-pwa-install-style">
 #jrPwaInstallBtn{
-  position:fixed;right:18px;bottom:18px;z-index:9999;
-  border:1px solid rgba(255,255,255,.18);border-radius:16px;
-  padding:13px 18px;background:linear-gradient(135deg,#22c55e,#0ea5e9);
-  color:#fff;font:800 14px Arial,Helvetica,sans-serif;cursor:pointer;
-  box-shadow:0 16px 38px rgba(0,0,0,.32);
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:2147483000;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:16px;
+  padding:13px 18px;
+  min-height:48px;
+  background:linear-gradient(135deg,#c8a24a,#8f6b21);
+  color:#fff;
+  font:800 14px Arial,Helvetica,sans-serif;
+  letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:0 16px 38px rgba(0,0,0,.35);
+  -webkit-tap-highlight-color:transparent;
 }
 #jrPwaInstallBtn[hidden]{display:none!important}
-@media(max-width:600px){#jrPwaInstallBtn{right:12px;bottom:12px;padding:12px 15px;font-size:13px}}
+
+@media(max-width:768px){
+  #jrPwaInstallBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    right:12px;
+    bottom:calc(12px + env(safe-area-inset-bottom));
+    min-width:158px;
+    padding:13px 16px;
+    font-size:13px;
+    border-radius:15px;
+  }
+}
 </style>
 
 </head>
@@ -3524,13 +3547,41 @@ function playCurrentClinico(){
 
   var installBtn = document.getElementById("jrPwaInstallBtn");
   var deferredPrompt = null;
-  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-  if (isStandalone && installBtn) installBtn.hidden = true;
+
+  function isStandaloneMode(){
+    return window.matchMedia("(display-mode: standalone)").matches ||
+           window.navigator.standalone === true;
+  }
+
+  function isMobileDevice(){
+    var ua = navigator.userAgent || "";
+    return /android|iphone|ipad|ipod|mobile/i.test(ua) ||
+           (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  }
+
+  function refreshInstallButton(){
+    if (!installBtn) return;
+
+    // Se já estiver aberto como app instalado, esconde o botão.
+    if (isStandaloneMode()) {
+      installBtn.hidden = true;
+      return;
+    }
+
+    // NO CELULAR: sempre mostra o botão.
+    if (isMobileDevice()) {
+      installBtn.hidden = false;
+      return;
+    }
+
+    // NO COMPUTADOR: mostra quando o navegador disser que o PWA pode ser instalado.
+    installBtn.hidden = !deferredPrompt;
+  }
 
   window.addEventListener("beforeinstallprompt", function(e){
     e.preventDefault();
     deferredPrompt = e;
-    if (installBtn) installBtn.hidden = false;
+    refreshInstallButton();
   });
 
   window.addEventListener("appinstalled", function(){
@@ -3538,23 +3589,42 @@ function playCurrentClinico(){
     if (installBtn) installBtn.hidden = true;
   });
 
+  if (window.matchMedia) {
+    try {
+      var displayMode = window.matchMedia("(display-mode: standalone)");
+      if (displayMode.addEventListener) {
+        displayMode.addEventListener("change", refreshInstallButton);
+      }
+    } catch(e) {}
+  }
+
   if (installBtn) {
-    var ua = navigator.userAgent || "";
-    var isiOS = /iphone|ipad|ipod/i.test(ua);
-    if (isiOS && !isStandalone) installBtn.hidden = false;
+    refreshInstallButton();
 
     installBtn.addEventListener("click", async function(){
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        try { await deferredPrompt.userChoice; } catch(e) {}
-        deferredPrompt = null;
+      if (isStandaloneMode()) {
         installBtn.hidden = true;
         return;
       }
+
+      // Android/Chrome/Edge: usa o prompt nativo quando disponível.
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } catch(e) {}
+        deferredPrompt = null;
+        refreshInstallButton();
+        return;
+      }
+
+      var ua = navigator.userAgent || "";
+      var isiOS = /iphone|ipad|ipod/i.test(ua);
+
       if (isiOS) {
-        alert('No iPhone/iPad: toque em Compartilhar e depois em "Adicionar à Tela de Início".');
+        alert('Para instalar no iPhone/iPad: toque no botão Compartilhar do Safari e depois em "Adicionar à Tela de Início".');
       } else {
-        alert('No computador ou Android, abra o menu do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".');
+        alert('Para instalar: abra o menu do navegador e toque em "Instalar aplicativo" ou "Adicionar à tela inicial".');
       }
     });
   }
