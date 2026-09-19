@@ -28,7 +28,7 @@ module.exports = async function handler(req, res) {
 
       const imageSrc = cardImage
         ? 'data:image/jpeg;base64,' + cardImage
-        : 'https://especificas-premium.vercel.app';
+        : '/especificas.jpg';
 
       const card = `
 <a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica" target="_blank" rel="noopener">
