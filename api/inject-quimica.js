@@ -15,6 +15,7 @@ module.exports = async function handler(req, res) {
     }
 
     let html = await source.text();
+    html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
 
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
       let cardImage = '';
