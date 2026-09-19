@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
         : 'https://especificas-premium.vercel.app';
 
       const card = `
-<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="${imageSrc}" alt="SEDUC PA Professor de Química">
   </div>
