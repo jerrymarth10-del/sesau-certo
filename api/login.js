@@ -11,7 +11,7 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ok:false, message:"Autenticação ainda não configurada no servidor."});
   }
 
-  const { email, senha } = req.body || {};
+  const { email, senha, lembrar } = req.body || {};
   if (!email || !senha) {
     return res.status(400).json({ok:false, message:"Informe e-mail e senha."});
   }

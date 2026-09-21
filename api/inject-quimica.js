@@ -20,6 +20,84 @@ module.exports = async function handler(req, res) {
     }
 
     let html = await source.text();
+
+    // Login: mantém a estrutura atual, mas melhora autofill/salvamento seguro,
+    // corrige o olhinho e evita carregar todas as videoaulas antes da autenticação.
+    html = html
+      .replace(
+        '<input type="email" id="email" placeholder="Digite seu e-mail" />',
+        '<input type="email" id="email" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" inputmode="email" placeholder="Digite seu e-mail" />'
+      )
+      .replace(
+        '<input type="password" id="senha" placeholder="Digite sua senha" />',
+        '<input type="password" id="senha" name="password" autocomplete="current-password" placeholder="Digite sua senha" />'
+      )
+      .replace(
+        '<span class="login-status">● Ambiente seguro</span>',
+        '<span class="login-status">● Ambiente seguro</span><label class="jr-remember-login"><input type="checkbox" id="jrRemember" checked><span>Lembrar acesso neste dispositivo</span></label>'
+      )
+      .replace(
+        'body: JSON.stringify({email, senha})',
+        'body: JSON.stringify({email, senha, lembrar: !!(document.getElementById("jrRemember") && document.getElementById("jrRemember").checked)})'
+      )
+      .replace(
+        'renderModules();\\n    data.forEach(subject => updateLessonUI(subject.id));',
+        'let jrModulesRendered = false;\\n    function jrEnsureModules(){\\n      if(jrModulesRendered) return;\\n      renderModules();\\n      data.forEach(subject => updateLessonUI(subject.id));\\n      jrModulesRendered = true;\\n    }'
+      )
+      .replace(
+        'if (resposta.ok && dados.authenticated) {\\n          mostrarPlataforma();',
+        'if (resposta.ok && dados.authenticated) {\\n          jrEnsureModules();\\n          mostrarPlataforma();'
+      )
+      .replace(
+        'senhaInput.value = "";\\n        mostrarPlataforma();',
+        'senhaInput.value = "";\\n        jrEnsureModules();\\n        mostrarPlataforma();'
+      )
+      .replace(
+        'referrerpolicy="strict-origin-when-cross-origin"\\n                  allowfullscreen></iframe>',
+        'referrerpolicy="strict-origin-when-cross-origin"\\n                  loading="lazy"\\n                  allowfullscreen></iframe>'
+      );
+
+    const loginEnhancement = `
+<style id="jr-login-enhancement-v1">
+  .jr-remember-login{display:inline-flex;align-items:center;gap:8px;color:#cfe8ef;font-size:12px;font-weight:700;cursor:pointer;user-select:none}
+  .jr-remember-login input{width:17px;height:17px;accent-color:#22c55e;cursor:pointer}
+  .toggle-password{z-index:3;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  @media(max-width:700px){.jr-remember-login{width:100%;margin-top:3px}}
+</style>
+<script id="jr-login-enhancement-script-v1">
+(function(){
+  function init(){
+    var email=document.getElementById('email');
+    var senha=document.getElementById('senha');
+    var btn=document.getElementById('toggleSenha');
+    var eyeOpen=document.getElementById('eyeOpen');
+    var eyeClosed=document.getElementById('eyeClosed');
+    try{
+      var savedEmail=localStorage.getItem('jr_apostilas_email');
+      if(email && savedEmail && !email.value) email.value=savedEmail;
+    }catch(e){}
+    if(btn && senha && !btn.dataset.jrFixed){
+      btn.dataset.jrFixed='1';
+      btn.addEventListener('click',function(ev){
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        var reveal=senha.type==='password';
+        senha.type=reveal?'text':'password';
+        btn.setAttribute('aria-label',reveal?'Ocultar senha':'Mostrar senha');
+        btn.setAttribute('aria-pressed',reveal?'true':'false');
+        btn.title=reveal?'Ocultar senha':'Mostrar senha';
+        if(eyeOpen) eyeOpen.classList.toggle('hidden',reveal);
+        if(eyeClosed) eyeClosed.classList.toggle('hidden',!reveal);
+        try{senha.focus({preventScroll:true});}catch(e){senha.focus();}
+      },true);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();
+<\/script>
+`;
+    html = html.replace('</head>', loginEnhancement + '</head>');
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
     if (!html.includes('jr-specific-card-style-v1')) {
       const cardCss = `
@@ -48,7 +126,7 @@ module.exports = async function handler(req, res) {
 <a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica&v=12" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="${imageSrc}" alt="SEDUC PA Professor de Química" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
-    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
+    <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
       <span class="especifica-admin-btn">Acessar</span>
     </div>
   </div>
@@ -73,7 +151,7 @@ module.exports = async function handler(req, res) {
 <a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium.vercel.app/?area=prf&v=15" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${PRF_CARD_BASE64}" alt="PRF Agente Administrativo" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
-    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
+    <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
       <span class="especifica-admin-btn">Acessar</span>
     </div>
   </div>
@@ -97,7 +175,7 @@ module.exports = async function handler(req, res) {
 <a class="especifica-card-link" data-jr-card="agente-endemias" href="https://especificas-premium.vercel.app/?area=endemias&v=2" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${ENDEMIAS_CARD_BASE64}" alt="Agente de Combate às Endemias" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
-    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
+    <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
       <span class="especifica-admin-btn">Acessar</span>
     </div>
   </div>
@@ -121,7 +199,7 @@ module.exports = async function handler(req, res) {
 <a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium.vercel.app/?area=sefin&v=2" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${SEFIN_CARD_BASE64}" alt="SEFIN/RO Material Geral" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
-    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
+    <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
       <span class="especifica-admin-btn">Acessar</span>
     </div>
   </div>
@@ -142,7 +220,7 @@ module.exports = async function handler(req, res) {
 
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
-    res.setHeader('cache-control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
     res.end(html);
   } catch (error) {
     res.statusCode = 500;
