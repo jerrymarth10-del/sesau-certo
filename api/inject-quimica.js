@@ -64,6 +64,49 @@ module.exports = async function handler(req, res) {
       }
     }
 
+
+    if (!html.includes('data-jr-card="agente-endemias"')) {
+      const endemiasCard = `
+<a class="especifica-card-link" data-jr-card="agente-endemias" href="https://especificas-premium.vercel.app/?area=endemias&v=1" target="_blank" rel="noopener">
+  <div class="especifica-card">
+    <img src="https://especificas-premium.vercel.app/api/card-endemias?v=20260921-1" alt="Agente de Combate às Endemias" width="320" height="480" loading="eager" decoding="async">
+  </div>
+</a>
+`;
+
+      const sectionStart = html.indexOf('<section id="especificas"');
+      if (sectionStart >= 0) {
+        const sectionEnd = html.indexOf('</section>', sectionStart);
+        if (sectionEnd >= 0) {
+          const gridClose = html.lastIndexOf('</div>', sectionEnd);
+          if (gridClose >= sectionStart) {
+            html = html.slice(0, gridClose) + endemiasCard + html.slice(gridClose);
+          }
+        }
+      }
+    }
+
+    if (!html.includes('data-jr-card="sefin-ro"')) {
+      const sefinCard = `
+<a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium.vercel.app/?area=sefin&v=1" target="_blank" rel="noopener">
+  <div class="especifica-card">
+    <img src="https://especificas-premium.vercel.app/api/card-sefin?v=20260921-1" alt="SEFIN/RO Material Geral" width="320" height="480" loading="eager" decoding="async">
+  </div>
+</a>
+`;
+
+      const sectionStart = html.indexOf('<section id="especificas"');
+      if (sectionStart >= 0) {
+        const sectionEnd = html.indexOf('</section>', sectionStart);
+        if (sectionEnd >= 0) {
+          const gridClose = html.lastIndexOf('</div>', sectionEnd);
+          if (gridClose >= sectionStart) {
+            html = html.slice(0, gridClose) + sefinCard + html.slice(gridClose);
+          }
+        }
+      }
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'no-cache, no-store, must-revalidate');
