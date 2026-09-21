@@ -18,6 +18,25 @@ module.exports = async function handler(req, res) {
 
     let html = await source.text();
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
+    if (!html.includes('jr-specific-card-style-v1')) {
+      const cardCss = `
+<style id="jr-specific-card-style-v1">
+.jr-specific-card{position:relative!important;overflow:hidden!important;background:#09101d!important}
+.jr-specific-visual{position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 76% 17%,rgba(239,68,68,.30),transparent 29%),linear-gradient(145deg,#0b1420 0%,#090d14 52%,#29080b 100%)}
+.jr-specific-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 0 58%,rgba(248,113,113,.12) 58% 60%,transparent 60% 100%)}
+.jr-specific-icon{position:absolute;right:18px;top:20px;font-size:54px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.45));opacity:.96}
+.jr-specific-lines{position:absolute;left:18px;right:18px;top:106px;height:78px;border-top:1px solid rgba(248,113,113,.22);border-bottom:1px solid rgba(248,113,113,.12);background:repeating-linear-gradient(180deg,transparent 0 17px,rgba(248,113,113,.07) 17px 18px)}
+.jr-prf-card .jr-specific-visual{background:radial-gradient(circle at 76% 17%,rgba(59,130,246,.28),transparent 29%),linear-gradient(145deg,#071321,#101827 50%,#26070a)}
+.jr-endemias-card .jr-specific-visual{background:radial-gradient(circle at 76% 17%,rgba(34,197,94,.18),transparent 29%),linear-gradient(145deg,#07161b,#0c1720 48%,#29070b)}
+.jr-sefin-card .jr-specific-visual{background:radial-gradient(circle at 76% 17%,rgba(245,158,11,.18),transparent 29%),linear-gradient(145deg,#111827,#0a0e16 52%,#2b0908)}
+.jr-specific-card .especifica-admin-shade{background:linear-gradient(180deg,rgba(2,6,23,.02) 20%,rgba(2,6,23,.28) 53%,rgba(2,6,23,.96) 100%)!important}
+.jr-specific-card .especifica-admin-body p{-webkit-line-clamp:4!important}
+.jr-specific-card:hover .jr-specific-visual{transform:none!important}
+@media(max-width:700px){.jr-specific-icon{font-size:44px;right:13px;top:15px}.jr-specific-lines{left:13px;right:13px;top:88px;height:64px}.jr-specific-card .especifica-admin-body p{font-size:11px}}
+</style>`;
+      html = html.replace('</head>', cardCss + '</head>');
+    }
+
 
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
       const imageSrc = 'https://especificas-premium.vercel.app/quimica-card.jpg?v=20260921-3';
@@ -45,9 +64,16 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="prf-administrativo"')) {
       const prfCard = `
-<a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium.vercel.app/?area=prf&v=13" target="_blank" rel="noopener">
-  <div class="especifica-card">
-    <img src="https://especificas-premium.vercel.app/prf-card.jpg?v=20260921-3" alt="PRF Agente Administrativo" width="320" height="480" loading="eager" decoding="async">
+<a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium.vercel.app/?area=prf&v=14" target="_blank" rel="noopener">
+  <div class="especifica-card jr-specific-card jr-prf-card">
+    <div class="jr-specific-visual"><span class="jr-specific-icon">🚔</span><span class="jr-specific-lines"></span></div>
+    <div class="especifica-admin-shade"></div>
+    <div class="especifica-admin-body">
+      <span class="especifica-admin-tag">PRF • Área Administrativa</span>
+      <h3>Agente Administrativo</h3>
+      <p>Trilha completa com aulas, revisões, questões comentadas e materiais em PDF.</p>
+      <span class="especifica-admin-btn">Acessar</span>
+    </div>
   </div>
 </a>
 `;
@@ -67,9 +93,16 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="agente-endemias"')) {
       const endemiasCard = `
-<a class="especifica-card-link" data-jr-card="agente-endemias" href="https://especificas-premium.vercel.app/?area=endemias&v=1" target="_blank" rel="noopener">
-  <div class="especifica-card">
-    <img src="https://especificas-premium.vercel.app/api/card-endemias?v=20260921-1" alt="Agente de Combate às Endemias" width="320" height="480" loading="eager" decoding="async">
+<a class="especifica-card-link" data-jr-card="agente-endemias" href="https://especificas-premium.vercel.app/?area=endemias&v=2" target="_blank" rel="noopener">
+  <div class="especifica-card jr-specific-card jr-endemias-card">
+    <div class="jr-specific-visual"><span class="jr-specific-icon">🦟</span><span class="jr-specific-lines"></span></div>
+    <div class="especifica-admin-shade"></div>
+    <div class="especifica-admin-body">
+      <span class="especifica-admin-tag">Vilhena/RO • IBGP</span>
+      <h3>Agente de Combate às Endemias</h3>
+      <p>55 aulas, legislação do SUS, conhecimentos específicos, provas IBGP e revisão.</p>
+      <span class="especifica-admin-btn">Acessar</span>
+    </div>
   </div>
 </a>
 `;
@@ -88,9 +121,16 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="sefin-ro"')) {
       const sefinCard = `
-<a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium.vercel.app/?area=sefin&v=1" target="_blank" rel="noopener">
-  <div class="especifica-card">
-    <img src="https://especificas-premium.vercel.app/api/card-sefin?v=20260921-1" alt="SEFIN/RO Material Geral" width="320" height="480" loading="eager" decoding="async">
+<a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium.vercel.app/?area=sefin&v=2" target="_blank" rel="noopener">
+  <div class="especifica-card jr-specific-card jr-sefin-card">
+    <div class="jr-specific-visual"><span class="jr-specific-icon">📊</span><span class="jr-specific-lines"></span></div>
+    <div class="especifica-admin-shade"></div>
+    <div class="especifica-admin-body">
+      <span class="especifica-admin-tag">SEFIN/RO • FGV</span>
+      <h3>SEFIN/RO</h3>
+      <p>52 aulas com núcleo fiscal, contábil, jurídico, FGV e provas anteriores.</p>
+      <span class="especifica-admin-btn">Acessar</span>
+    </div>
   </div>
 </a>
 `;
