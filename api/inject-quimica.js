@@ -20,7 +20,7 @@ module.exports = async function handler(req, res) {
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
 
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
-      const imageSrc = 'data:image/jpeg;base64,' + CHEMISTRY_CARD_BASE64;
+      const imageSrc = 'https://especificas-premium.vercel.app/quimica-card.jpg?v=20260921-3';
 
       const card = `
 <a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica&v=12" target="_blank" rel="noopener">
@@ -37,6 +37,28 @@ module.exports = async function handler(req, res) {
           const gridClose = html.lastIndexOf('</div>', sectionEnd);
           if (gridClose >= sectionStart) {
             html = html.slice(0, gridClose) + card + html.slice(gridClose);
+          }
+        }
+      }
+    }
+
+
+    if (!html.includes('data-jr-card="prf-administrativo"')) {
+      const prfCard = `
+<a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium.vercel.app/?area=prf&v=13" target="_blank" rel="noopener">
+  <div class="especifica-card">
+    <img src="https://especificas-premium.vercel.app/prf-card.jpg?v=20260921-3" alt="PRF Agente Administrativo" width="320" height="480" loading="eager" decoding="async">
+  </div>
+</a>
+`;
+
+      const prfSectionStart = html.indexOf('<section id="especificas"');
+      if (prfSectionStart >= 0) {
+        const prfSectionEnd = html.indexOf('</section>', prfSectionStart);
+        if (prfSectionEnd >= 0) {
+          const prfGridClose = html.lastIndexOf('</div>', prfSectionEnd);
+          if (prfGridClose >= prfSectionStart) {
+            html = html.slice(0, prfGridClose) + prfCard + html.slice(prfGridClose);
           }
         }
       }
