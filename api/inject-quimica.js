@@ -41,20 +41,32 @@ module.exports = async function handler(req, res) {
         'body: JSON.stringify({email, senha, lembrar: !!(document.getElementById("jrRemember") && document.getElementById("jrRemember").checked)})'
       )
       .replace(
-        'renderModules();\\n    data.forEach(subject => updateLessonUI(subject.id));',
-        'let jrModulesRendered = false;\\n    function jrEnsureModules(){\\n      if(jrModulesRendered) return;\\n      renderModules();\\n      data.forEach(subject => updateLessonUI(subject.id));\\n      jrModulesRendered = true;\\n    }'
+        /renderModules\(\);\s*data\.forEach\(subject => updateLessonUI\(subject\.id\)\);/,
+        `let jrModulesRendered = false;
+    function jrEnsureModules(){
+      if(jrModulesRendered) return;
+      renderModules();
+      data.forEach(subject => updateLessonUI(subject.id));
+      jrModulesRendered = true;
+    }`
       )
       .replace(
-        'if (resposta.ok && dados.authenticated) {\\n          mostrarPlataforma();',
-        'if (resposta.ok && dados.authenticated) {\\n          jrEnsureModules();\\n          mostrarPlataforma();'
+        /if \(resposta\.ok && dados\.authenticated\) \{\s*mostrarPlataforma\(\);/,
+        `if (resposta.ok && dados.authenticated) {
+          jrEnsureModules();
+          mostrarPlataforma();`
       )
       .replace(
-        'senhaInput.value = "";\\n        mostrarPlataforma();',
-        'senhaInput.value = "";\\n        jrEnsureModules();\\n        mostrarPlataforma();'
+        /senhaInput\.value = "";\s*mostrarPlataforma\(\);/,
+        `senhaInput.value = "";
+        jrEnsureModules();
+        mostrarPlataforma();`
       )
       .replace(
-        'referrerpolicy="strict-origin-when-cross-origin"\\n                  allowfullscreen></iframe>',
-        'referrerpolicy="strict-origin-when-cross-origin"\\n                  loading="lazy"\\n                  allowfullscreen></iframe>'
+        /referrerpolicy="strict-origin-when-cross-origin"\s*allowfullscreen><\/iframe>/g,
+        `referrerpolicy="strict-origin-when-cross-origin"
+                  loading="lazy"
+                  allowfullscreen></iframe>`
       );
 
     const loginEnhancement = `
