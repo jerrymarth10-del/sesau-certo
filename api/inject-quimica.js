@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
       )
       .replace(
         '<span class="login-status">● Ambiente seguro</span>',
-        '<span class="login-status">● Ambiente seguro</span><label class="jr-remember-login"><input type="checkbox" id="jrRemember" checked><span>Lembrar acesso neste dispositivo</span></label>'
+        '<span class="login-status">● Ambiente seguro</span><label class="jr-remember-login"><input type="checkbox" id="jrRemember" checked><span>Salvar login neste navegador</span></label>'
       )
       .replace(
         'body: JSON.stringify({email, senha})',
@@ -262,7 +262,7 @@ module.exports = async function handler(req, res) {
     var eyeOpen=document.getElementById('eyeOpen');
     var eyeClosed=document.getElementById('eyeClosed');
     var entrar=document.getElementById('entrarBtn');
-    var salvar=document.getElementById('jrSaveLogin');
+    var salvar=document.getElementById('jrRemember') || document.getElementById('jrSaveLogin');
     if(!email||!senha||!toggle) return;
 
     email.setAttribute('name','username');
