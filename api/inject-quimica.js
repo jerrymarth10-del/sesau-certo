@@ -338,6 +338,88 @@ module.exports = async function handler(req, res) {
       html = html.replace('</head>', loginFix + '</head>');
     }
 
+
+    if (!html.includes('jr-login-ux-fix-v1')) {
+      const loginUxFix = `
+<script id="jr-login-ux-fix-v1">
+(function(){
+  function install(){
+    var email = document.getElementById('email');
+    var senha = document.getElementById('senha');
+    var toggle = document.getElementById('toggleSenha');
+    var eyeOpen = document.getElementById('eyeOpen');
+    var eyeClosed = document.getElementById('eyeClosed');
+    var meta = document.querySelector('.login-meta');
+    if (!email || !senha || !toggle) return;
+
+    email.setAttribute('name','username');
+    email.setAttribute('autocomplete','username');
+    email.setAttribute('autocapitalize','none');
+    email.setAttribute('spellcheck','false');
+    senha.setAttribute('name','password');
+    senha.setAttribute('autocomplete','current-password');
+
+    var remember = document.getElementById('salvarLogin');
+    if (!remember && meta) {
+      var label = document.createElement('label');
+      label.setAttribute('for','salvarLogin');
+      label.style.cssText='display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#d7f2f8;font-weight:700';
+      label.innerHTML='<input type="checkbox" id="salvarLogin" style="width:18px;height:18px;accent-color:#22c55e"> Salvar login neste navegador';
+      meta.appendChild(label);
+      remember = document.getElementById('salvarLogin');
+    }
+
+    try {
+      var lembrar = localStorage.getItem('jr_apostilas_lembrar_login') === '1';
+      var emailSalvo = localStorage.getItem('jr_apostilas_email') || '';
+      if (lembrar && emailSalvo) {
+        email.value = emailSalvo;
+        if (remember) remember.checked = true;
+      }
+    } catch(e){}
+
+    if (remember && !remember.dataset.jrBound) {
+      remember.dataset.jrBound='1';
+      remember.addEventListener('change', function(){
+        try {
+          if (remember.checked) {
+            localStorage.setItem('jr_apostilas_lembrar_login','1');
+            if (email.value.trim()) localStorage.setItem('jr_apostilas_email', email.value.trim());
+          } else {
+            localStorage.removeItem('jr_apostilas_lembrar_login');
+            localStorage.removeItem('jr_apostilas_email');
+          }
+        } catch(e){}
+      });
+      email.addEventListener('input', function(){
+        if (!remember.checked) return;
+        try { localStorage.setItem('jr_apostilas_email', email.value.trim()); } catch(e){}
+      });
+    }
+
+    if (!toggle.dataset.jrEyeFixed) {
+      toggle.dataset.jrEyeFixed='1';
+      toggle.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        var show = senha.type === 'password';
+        senha.type = show ? 'text' : 'password';
+        toggle.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+        toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+        toggle.title = show ? 'Ocultar senha' : 'Mostrar senha';
+        if (eyeOpen) eyeOpen.classList.toggle('hidden', show);
+        if (eyeClosed) eyeClosed.classList.toggle('hidden', !show);
+        try { senha.focus({preventScroll:true}); } catch(e){ senha.focus(); }
+      }, true);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+  else install();
+})();
+<\/script>`;
+      html = html.replace('</body>', loginUxFix + '</body>');
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
