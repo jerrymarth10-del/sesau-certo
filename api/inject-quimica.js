@@ -230,6 +230,114 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Ajuste isolado do login: olhinho funcional + integração com o gerenciador
+    // de senhas do navegador. Nenhuma regra de autenticação/conteúdo é alterada.
+    html = html
+      .replace(
+        '<input type="email" id="email" placeholder="Digite seu e-mail" />',
+        '<input type="email" id="email" name="username" autocomplete="username" inputmode="email" placeholder="Digite seu e-mail" />'
+      )
+      .replace(
+        '<input type="password" id="senha" placeholder="Digite sua senha" />',
+        '<input type="password" id="senha" name="password" autocomplete="current-password" placeholder="Digite sua senha" />'
+      )
+      .replace(
+        '<div class="login-meta">\n                <span class="login-status">● Ambiente seguro</span>\n                \n              </div>',
+        '<div class="login-meta">\n                <span class="login-status">● Ambiente seguro</span>\n                <label class="jr-save-login" for="jrSaveLogin"><input type="checkbox" id="jrSaveLogin" /> <span>Salvar login neste navegador</span></label>\n              </div>'
+      );
+
+    if (!html.includes('jr-login-fix-v1')) {
+      const loginFix = `
+<style id="jr-login-fix-v1">
+.jr-save-login{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;user-select:none}
+.jr-save-login input{width:17px;height:17px;accent-color:var(--green);cursor:pointer}
+@media(max-width:640px){.login-meta{align-items:flex-start!important;gap:12px!important}.jr-save-login{font-size:12px}}
+</style>
+<script id="jr-login-fix-v1-script">
+(function(){
+  function init(){
+    var email=document.getElementById('email');
+    var senha=document.getElementById('senha');
+    var toggle=document.getElementById('toggleSenha');
+    var eyeOpen=document.getElementById('eyeOpen');
+    var eyeClosed=document.getElementById('eyeClosed');
+    var entrar=document.getElementById('entrarBtn');
+    var salvar=document.getElementById('jrSaveLogin');
+    if(!email||!senha||!toggle) return;
+
+    email.setAttribute('name','username');
+    email.setAttribute('autocomplete','username');
+    senha.setAttribute('name','password');
+    senha.setAttribute('autocomplete','current-password');
+
+    var savedEmail='';
+    try{ savedEmail=localStorage.getItem('jr_saved_login_email')||''; }catch(e){}
+    if(savedEmail && !email.value) email.value=savedEmail;
+    if(salvar) salvar.checked=!!savedEmail;
+
+    toggle.addEventListener('click',function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      var mostrar=senha.type==='password';
+      senha.type=mostrar?'text':'password';
+      toggle.setAttribute('aria-label',mostrar?'Ocultar senha':'Mostrar senha');
+      toggle.setAttribute('aria-pressed',mostrar?'true':'false');
+      toggle.title=mostrar?'Ocultar senha':'Mostrar senha';
+      if(eyeOpen) eyeOpen.classList.toggle('hidden',mostrar);
+      if(eyeClosed) eyeClosed.classList.toggle('hidden',!mostrar);
+      try{ senha.focus({preventScroll:true}); }catch(e){ senha.focus(); }
+    },true);
+
+    if(salvar){
+      salvar.addEventListener('change',function(){
+        if(!salvar.checked){
+          try{ localStorage.removeItem('jr_saved_login_email'); }catch(e){}
+        }
+      });
+    }
+
+    if(entrar){
+      entrar.addEventListener('click',function(){
+        var loginEmail=(email.value||'').trim();
+        var loginSenha=senha.value||'';
+        var deveSalvar=!!(salvar&&salvar.checked);
+
+        if(deveSalvar && loginEmail){
+          try{ localStorage.setItem('jr_saved_login_email',loginEmail); }catch(e){}
+        } else if(!deveSalvar){
+          try{ localStorage.removeItem('jr_saved_login_email'); }catch(e){}
+        }
+
+        // Quando suportado, pede ao próprio navegador para guardar a credencial.
+        // A plataforma não grava a senha em localStorage nem no código.
+        if(deveSalvar && loginEmail && loginSenha && window.PasswordCredential &&
+           navigator.credentials && navigator.credentials.store){
+          setTimeout(function(){
+            fetch('/api/session',{credentials:'same-origin',cache:'no-store'})
+              .then(function(r){return r.ok?r.json():null})
+              .then(function(data){
+                if(data&&data.authenticated){
+                  try{
+                    navigator.credentials.store(new PasswordCredential({
+                      id:loginEmail,
+                      name:loginEmail,
+                      password:loginSenha
+                    })).catch(function(){});
+                  }catch(e){}
+                }
+              }).catch(function(){});
+          },700);
+        }
+      },true);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();
+<\/script>`;
+      html = html.replace('</head>', loginFix + '</head>');
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
