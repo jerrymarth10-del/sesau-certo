@@ -18,17 +18,7 @@ module.exports = async function handler(req, res) {
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
 
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
-      let cardImage = '';
-      try {
-        const imageResponse = await fetch('https://especificas-premium.vercel.app/quimica-card.b64', {
-          headers: { 'user-agent': 'JR-Apostilas-Quimica-Card/1.0' }
-        });
-        if (imageResponse.ok) cardImage = (await imageResponse.text()).trim();
-      } catch (e) {}
-
-      const imageSrc = cardImage
-        ? 'data:image/jpeg;base64,' + cardImage
-        : '/especificas.jpg';
+      const imageSrc = 'https://especificas-premium.vercel.app/quimica-card.jpg?card=v8';
 
       const card = `
 <a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica" target="_blank" rel="noopener">
