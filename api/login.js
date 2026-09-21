@@ -20,7 +20,6 @@ module.exports = async function handler(req, res) {
     return res.status(401).json({ok:false, message:"Senha incorreta. Tente novamente."});
   }
 
-  const token = createToken(email);
-  setSessionCookie(res, token);
+  const maxAgeSeconds = lembrar === true ? 60 * 60 * 24 * 30 : 60 * 60 * 12;\n  const token = createToken(email, maxAgeSeconds);\n  setSessionCookie(res, token, maxAgeSeconds);
   return res.status(200).json({ok:true});
 };

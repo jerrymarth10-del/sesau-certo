@@ -20,10 +20,10 @@ function sign(payload) {
   return crypto.createHmac("sha256", getSecret()).update(payload).digest("base64url");
 }
 
-function createToken(email) {
+function createToken(email, maxAgeSeconds = MAX_AGE_SECONDS) {
   const payload = Buffer.from(JSON.stringify({
     email: String(email || "").slice(0, 180),
-    exp: Date.now() + MAX_AGE_SECONDS * 1000
+    exp: Date.now() + maxAgeSeconds * 1000
   })).toString("base64url");
   return payload + "." + sign(payload);
 }
@@ -54,9 +54,9 @@ function sessionFromRequest(req) {
   return verifyToken(readCookies(req)[COOKIE_NAME]);
 }
 
-function setSessionCookie(res, token) {
+function setSessionCookie(res, token, maxAgeSeconds = MAX_AGE_SECONDS) {
   res.setHeader("Set-Cookie",
-    `${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${MAX_AGE_SECONDS}`);
+    `${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAgeSeconds}`);
 }
 
 function clearSessionCookie(res) {
