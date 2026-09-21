@@ -18,23 +18,12 @@ module.exports = async function handler(req, res) {
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
 
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
-      let imageSrc = 'https://especificas-premium.vercel.app/quimica-card.jpg?card=v9';
-
-      // Embute a mesma arte usada no Projeto 2 para evitar falha de cache/PWA no card.
-      try {
-        const imageSource = await fetch('https://especificas-premium.vercel.app/quimica-card.b64?card=v9', {
-          headers: { 'user-agent': 'JR-Apostilas-Projeto1-Quimica-Image/1.1' }
-        });
-        if (imageSource.ok) {
-          const b64 = (await imageSource.text()).trim();
-          if (b64 && b64.length > 1000) imageSrc = 'data:image/jpeg;base64,' + b64;
-        }
-      } catch (e) {}
+      const imageSrc = '/api/quimica-card?v=10';
 
       const card = `
-<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica&v=10" target="_blank" rel="noopener">
   <div class="especifica-card">
-    <img src="${imageSrc}" alt="SEDUC PA Professor de Química" loading="eager" decoding="async">
+    <img src="${imageSrc}" alt="SEDUC PA Professor de Química" width="320" height="480" loading="eager" decoding="async">
   </div>
 </a>
 `;
