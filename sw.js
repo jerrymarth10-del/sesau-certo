@@ -1,4 +1,4 @@
-const CACHE_NAME = "jr-a-prova-pwa-v3-mobile-install";
+const CACHE_NAME = "jr-a-prova-pwa-v4-login-fix";
 const APP_SHELL = [
   "./",
   "./index.html",
