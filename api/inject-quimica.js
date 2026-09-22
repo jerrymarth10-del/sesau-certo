@@ -359,7 +359,7 @@ module.exports = async function handler(req, res) {
     senha.setAttribute('name','password');
     senha.setAttribute('autocomplete','current-password');
 
-    var remember = document.getElementById('salvarLogin');
+    var remember = document.getElementById('jrRemember') || document.getElementById('jrSaveLogin') || document.getElementById('salvarLogin');
     if (!remember && meta) {
       var label = document.createElement('label');
       label.setAttribute('for','salvarLogin');
