@@ -360,15 +360,6 @@ module.exports = async function handler(req, res) {
     senha.setAttribute('autocomplete','current-password');
 
     var remember = document.getElementById('jrRemember') || document.getElementById('jrSaveLogin') || document.getElementById('salvarLogin');
-    if (!remember && meta) {
-      var label = document.createElement('label');
-      label.setAttribute('for','salvarLogin');
-      label.style.cssText='display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#d7f2f8;font-weight:700';
-      label.innerHTML='<input type="checkbox" id="salvarLogin" style="width:18px;height:18px;accent-color:#22c55e"> Salvar login neste navegador';
-      meta.appendChild(label);
-      remember = document.getElementById('salvarLogin');
-    }
-
     try {
       var lembrar = localStorage.getItem('jr_apostilas_lembrar_login') === '1';
       var emailSalvo = localStorage.getItem('jr_apostilas_email') || '';
