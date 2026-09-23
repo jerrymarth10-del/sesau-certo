@@ -408,7 +408,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (!html.includes('quiz-upgrade.js')) {
-      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=2"></script></body>');
+      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=3"></script></body>');
     }
 
     res.statusCode = 200;
