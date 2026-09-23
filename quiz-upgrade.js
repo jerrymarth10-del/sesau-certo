@@ -100,7 +100,14 @@
 
   function isTooEasy(item){
     const q=String(item.q||"");
-    return /^A palavra corretamente grafada é:/i.test(q) ||
+    const opts=Array.isArray(item.o)?item.o:[];
+    const knownAmbiguous =
+      q==="A regência verbal está correta em:" ||
+      (q==="Assinale a alternativa correta." &&
+       opts.includes("Assisti ao filme.") &&
+       opts.includes("Aspirava ao cargo, no sentido de desejar."));
+    return knownAmbiguous ||
+           /^A palavra corretamente grafada é:/i.test(q) ||
            /^Um produto de R\$/i.test(q) ||
            /^Em um grupo de \d+ pessoas, \d+% faltaram/i.test(q) ||
            q.length < 38;
