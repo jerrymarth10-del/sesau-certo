@@ -333,6 +333,119 @@ module.exports = async function handler(req, res) {
       }
     }
 
+
+    // Padronização visual final dos cards das áreas específicas:
+    // todos com a mesma proporção e um único botão "Acessar" do mesmo tamanho.
+    if (!html.includes('jr-uniform-specific-cards-v2')) {
+      const uniformCards = `
+<style id="jr-uniform-specific-cards-v2">
+#especificas .especificas-grid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr))!important;
+  gap:18px!important;
+  align-items:stretch!important;
+}
+#especificas .especifica-card-link{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  height:100%!important;
+  text-decoration:none!important;
+}
+#especificas .especifica-card{
+  position:relative!important;
+  width:100%!important;
+  aspect-ratio:2/3!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  border-radius:22px!important;
+}
+#especificas .especifica-card>img{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+#especificas .jr-new-card-access,
+#especificas .jr-image-card-body{
+  display:none!important;
+}
+#especificas .jr-uniform-access-btn{
+  position:absolute!important;
+  z-index:8!important;
+  left:14px!important;
+  right:14px!important;
+  bottom:14px!important;
+  width:calc(100% - 28px)!important;
+  height:44px!important;
+  min-height:44px!important;
+  padding:0 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  border-radius:12px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  background:linear-gradient(135deg,#dc2626,#991b1b)!important;
+  color:#fff!important;
+  font-size:14px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+  text-transform:none!important;
+  box-shadow:0 8px 18px rgba(153,27,27,.34)!important;
+  pointer-events:none!important;
+}
+@media(max-width:700px){
+  #especificas .especificas-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+  }
+  #especificas .especifica-card{
+    border-radius:18px!important;
+  }
+  #especificas .jr-uniform-access-btn{
+    left:10px!important;
+    right:10px!important;
+    bottom:10px!important;
+    width:calc(100% - 20px)!important;
+    height:38px!important;
+    min-height:38px!important;
+    border-radius:10px!important;
+    font-size:12px!important;
+  }
+}
+</style>
+<script id="jr-uniform-specific-cards-v2-script">
+(function(){
+  function apply(){
+    var cards=document.querySelectorAll('#especificas .especifica-card');
+    cards.forEach(function(card){
+      card.querySelectorAll('.jr-new-card-access,.jr-image-card-body').forEach(function(el){
+        el.style.display='none';
+      });
+      if(!card.querySelector('.jr-uniform-access-btn')){
+        var label=document.createElement('span');
+        label.className='jr-uniform-access-btn';
+        label.textContent='Acessar';
+        label.setAttribute('aria-hidden','true');
+        card.appendChild(label);
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply,{once:true});
+  else apply();
+})();
+<\/script>
+`;
+      html = html.replace('</head>', uniformCards + '</head>');
+    }
+
     // Ajuste isolado do login: olhinho funcional + integração com o gerenciador
     // de senhas do navegador. Nenhuma regra de autenticação/conteúdo é alterada.
     html = html
