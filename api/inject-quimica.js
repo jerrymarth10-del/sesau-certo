@@ -407,6 +407,10 @@ module.exports = async function handler(req, res) {
       html = html.replace('</body>', loginUxFix + '</body>');
     }
 
+    if (!html.includes('quiz-upgrade.js')) {
+      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=2"></script></body>');
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
