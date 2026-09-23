@@ -21,6 +21,13 @@ module.exports = async function handler(req, res) {
 
     let html = await source.text();
 
+    // Login: remove o aviso antigo de envio das específicas por WhatsApp.
+    // O aluno acessa as áreas diretamente dentro da plataforma.
+    html = html.replace(
+      /<div class="mini-box">\s*<strong>Específicas por cargo<\/strong>[\s\S]*?<\/div>/,
+      ''
+    );
+
     // Login: mantém a estrutura atual, mas melhora autofill/salvamento seguro,
     // corrige o olhinho e evita carregar todas as videoaulas antes da autenticação.
     html = html
@@ -408,7 +415,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (!html.includes('quiz-upgrade.js')) {
-      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=4"></script></body>');
+      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=5"></script></body>');
     }
 
     res.statusCode = 200;
