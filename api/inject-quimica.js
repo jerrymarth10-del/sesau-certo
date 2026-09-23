@@ -133,6 +133,76 @@ module.exports = async function handler(req, res) {
 .jr-specific-card .especifica-admin-body p{-webkit-line-clamp:4!important}
 .jr-specific-card:hover .jr-specific-visual{transform:none!important}
 @media(max-width:700px){.jr-specific-icon{font-size:44px;right:13px;top:15px}.jr-specific-lines{left:13px;right:13px;top:88px;height:64px}.jr-specific-card .especifica-admin-body p{font-size:11px}}
+
+/* Projeto 1: padronização definitiva da grid, cartões e botões Acessar */
+#especificas .especificas-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr)) !important;
+  gap:18px !important;
+  align-items:stretch !important;
+}
+#especificas .especifica-card-link{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  text-decoration:none !important;
+}
+#especificas .especifica-card{
+  position:relative !important;
+  width:100% !important;
+  aspect-ratio:2 / 3 !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  border-radius:22px !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+#especificas .especifica-admin-body{
+  box-sizing:border-box !important;
+  padding:18px !important;
+}
+#especificas .especifica-admin-btn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:42px !important;
+  min-height:42px !important;
+  max-height:42px !important;
+  padding:0 16px !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  border-radius:12px !important;
+  font-size:14px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+#especificas .jr-image-card-body{
+  display:none !important;
+}
+@media(max-width:700px){
+  #especificas .especificas-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:12px !important;
+  }
+  #especificas .especifica-card{
+    border-radius:18px !important;
+  }
+  #especificas .especifica-admin-body{
+    padding:13px !important;
+  }
+  #especificas .especifica-admin-btn{
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
+    padding:0 10px !important;
+    border-radius:10px !important;
+    font-size:12px !important;
+  }
+}
 </style>`;
       html = html.replace('</head>', cardCss + '</head>');
     }
