@@ -2,8 +2,15 @@
   "use strict";
 
   const ROUND_SIZE = 20;
-  const HARD_PER_ROUND = 6;
-  const STORAGE_PREFIX = "jr_quiz_rotation_v2_";
+  const HARD_PER_ROUND = 8;
+  const STORAGE_PREFIX = "jr_quiz_rotation_v3_";
+  const SUBJECT_QUIZ_KEY = Object.freeze({
+    portugues:"portugues",
+    rlm:"rlm",
+    informatica:"informatica",
+    sus:"sus",
+    rondonia:"rondonia"
+  });
 
   const JR_HARD_BANK = {
     portugues: [
@@ -98,19 +105,38 @@
     try{ localStorage.setItem(STORAGE_PREFIX+key, JSON.stringify(seen.slice(-180))); }catch(e){}
   }
 
-  function isTooEasy(item){
-    const q=String(item.q||"");
+  function isTooEasy(item, quizKey){
+    const q=String(item.q||"").trim();
     const opts=Array.isArray(item.o)?item.o:[];
     const knownAmbiguous =
       q==="A regência verbal está correta em:" ||
       (q==="Assinale a alternativa correta." &&
        opts.includes("Assisti ao filme.") &&
        opts.includes("Aspirava ao cargo, no sentido de desejar."));
-    return knownAmbiguous ||
-           /^A palavra corretamente grafada é:/i.test(q) ||
-           /^Um produto de R\$/i.test(q) ||
-           /^Em um grupo de \d+ pessoas, \d+% faltaram/i.test(q) ||
-           q.length < 38;
+
+    if(knownAmbiguous || q.length < 48) return true;
+
+    if(quizKey==="portugues"){
+      return /^A palavra corretamente grafada é:/i.test(q) ||
+             /^Qual palavra está corretamente grafada/i.test(q) ||
+             /^A palavra corretamente acentuada/i.test(q) ||
+             /^Assinale a palavra com acentuação correta/i.test(q);
+    }
+    if(quizKey==="rlm"){
+      return /^Um produto de R\$/i.test(q) ||
+             /^Em um grupo de \d+ pessoas, \d+% faltaram/i.test(q) ||
+             /^Quanto é \d+/i.test(q);
+    }
+    if(quizKey==="informatica"){
+      return /^(O que é|Qual é) (um |uma )?(mouse|teclado|monitor|impressora|arquivo|pasta)/i.test(q);
+    }
+    if(quizKey==="sus"){
+      return /^(SUS significa|A sigla SUS|O SUS é)/i.test(q);
+    }
+    if(quizKey==="rondonia"){
+      return /^(Qual é a capital|Rondônia fica em qual região)/i.test(q);
+    }
+    return false;
   }
 
   function freshPick(pool, count, key, seen){
@@ -143,11 +169,25 @@
     const hard=JR_HARD_BANK[quizKey]||[];
     const seen=loadSeen(quizKey);
     const hardPick=freshPick(hard, Math.min(HARD_PER_ROUND, hard.length), quizKey, seen);
-    const preferred=baseRaw.filter(x=>!isTooEasy(x));
+    const preferred=baseRaw.filter(x=>!isTooEasy(x, quizKey));
     const basePool=preferred.length >= (ROUND_SIZE-hardPick.length) ? preferred : baseRaw;
     const basePick=freshPick(basePool, ROUND_SIZE-hardPick.length, quizKey, seen);
     saveSeen(quizKey, seen);
-    return shuffle(hardPick.concat(basePick)).map(shuffleOptions);
+
+    const merged=[];
+    const mergedIds=new Set();
+    hardPick.concat(basePick).forEach(item=>{
+      const id=sig(item);
+      if(!mergedIds.has(id)){
+        mergedIds.add(id);
+        merged.push(item);
+      }
+    });
+    if(merged.length<ROUND_SIZE){
+      const refill=shuffle(baseRaw).filter(item=>!mergedIds.has(sig(item))).slice(0,ROUND_SIZE-merged.length);
+      refill.forEach(item=>merged.push(item));
+    }
+    return shuffle(merged.slice(0,ROUND_SIZE)).map(shuffleOptions);
   }
 
   function updateIntro(subjectId){
@@ -155,15 +195,18 @@
     const panel=box && box.closest(".quiz-panel");
     if(!panel) return;
     const head=panel.querySelector(".quiz-head span:last-child");
-    if(head) head.textContent=ROUND_SIZE+" questões por rodada • renovação automática • nível IDECAN";
+    if(head) head.textContent=ROUND_SIZE+" questões por rodada • sem mistura de matérias • nível IDECAN";
     const p=panel.querySelector(".quiz-intro p");
-    if(p) p.textContent="Cada rodada combina questões em ordem diferente, prioriza itens mais exigentes e inclui desafios inéditos inspirados no estilo IDECAN, com correção imediata.";
+    if(p) p.textContent="Cada rodada traz 20 questões exclusivamente desta disciplina, em ordem renovada, priorizando nível mais alto e cobrança inspirada no estilo IDECAN, com correção imediata.";
   }
 
   window.startQuiz=function(subjectId, quizKey){
-    const questions=buildRound(quizKey);
+    const expectedKey=SUBJECT_QUIZ_KEY[subjectId];
+    const safeKey=expectedKey || quizKey;
+    if(!safeKey || !JR_HARD_BANK[safeKey] || !(typeof quizBank!=="undefined" && quizBank[safeKey])) return;
+    const questions=buildRound(safeKey);
     if(!questions.length) return;
-    quizState[subjectId]={index:0,score:0,answered:false,quizKey,questions};
+    quizState[subjectId]={index:0,score:0,answered:false,quizKey:safeKey,questions};
     updateIntro(subjectId);
     document.getElementById("quiz-result-"+subjectId).classList.add("hidden");
     document.getElementById("quiz-box-"+subjectId).classList.remove("hidden");
