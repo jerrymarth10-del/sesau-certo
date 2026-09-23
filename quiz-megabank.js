@@ -52,7 +52,7 @@ function rlmBank(){
       Math.round((down-up)*100)/100,
       0
     ]).map(v=>num(v)+"%");
-    out.push({q:"Um valor de R$ "+base+",00 sofre aumento de "+up+"% e, em seguida, redução de "+down+"% sobre o valor já reajustado. Qual é a variação percentual final em relação ao valor inicial?",o:ops,a:0,e:"Fatores sucessivos se multiplicam: (1+"+up+"/100)×(1-"+down+"/100+"). O resultado final corresponde a variação de "+num(correct)+"% em relação ao valor inicial."});
+    out.push({q:"Um valor de R$ "+base+",00 sofre aumento de "+up+"% e, em seguida, redução de "+down+"% sobre o valor já reajustado. Qual é a variação percentual final em relação ao valor inicial?",o:ops,a:0,e:"Fatores sucessivos se multiplicam: (1+"+up+"/100)×(1-"+down+"/100). O resultado final corresponde a variação de "+num(correct)+"% em relação ao valor inicial."});
   }
   // Trabalho e produtividade: 30.
   for(let i=0;i<30;i++){
