@@ -64,29 +64,38 @@ function rlmBank(){
   }
   // Médias ponderadas: 30.
   for(let i=0;i<30;i++){
-    const n1=6+(i%4), n2=7+((i+1)%3), n3=8+((i+2)%3);
-    const p1=2+(i%2), p2=3, p3=5;
+    const n1=5+(i%6), n2=6+((i*2+1)%5), n3=7+((i*3+2)%4);
+    const p1=2+(i%3), p2=3+((i+1)%3), p3=4+((i+2)%3);
     const sum=n1*p1+n2*p2+n3*p3, weights=p1+p2+p3, ans=sum/weights;
     const rounded=Math.round(ans*100)/100;
     const ops=uniqueNumericOptions(rounded,[(n1+n2+n3)/3,rounded+0.5,rounded-0.5,sum/(weights+1),sum/(weights-1)]).map(num);
     out.push({q:"Um candidato obteve notas "+n1+", "+n2+" e "+n3+" em avaliações com pesos "+p1+", "+p2+" e "+p3+", respectivamente. Qual é a média ponderada?",o:ops,a:0,e:"A média ponderada é ("+n1+"×"+p1+" + "+n2+"×"+p2+" + "+n3+"×"+p3+") ÷ "+weights+" = "+num(rounded)+"."});
   }
-  // Probabilidade binomial simples: 30.
+  // Probabilidade sem reposição: 30 questões com parâmetros diferentes.
   for(let i=0;i<30;i++){
-    const n=4+(i%3), k=2+(i%2), pDen=2;
-    function comb(n,k){let r=1;for(let j=1;j<=k;j++)r=r*(n-j+1)/j;return r;}
-    const fav=comb(n,k), den=Math.pow(2,n), ans=fav/den;
-    const pct=Math.round(ans*10000)/100;
-    const ops=uniqueNumericOptions(pct,[Math.round((1/den)*10000)/100,Math.round((k/n)*10000)/100,Math.round((fav/(den*2))*10000)/100,Math.round(((fav+1)/den)*10000)/100]).map(v=>num(v)+"%");
-    out.push({q:"Em "+n+" questões independentes com duas alternativas equiprováveis, um candidato marca ao acaso. Qual é a probabilidade de acertar exatamente "+k+" questões?",o:ops,a:0,e:"Há C("+n+","+k+") = "+fav+" sequências favoráveis entre "+den+" sequências equiprováveis. A probabilidade é "+fav+"/"+den+" = "+num(pct)+"%."});
+    const red=5+i, blue=7+(i%9), total=red+blue;
+    const numerator=2*red*blue, denominator=total*(total-1);
+    const pct=Math.round((numerator/denominator)*10000)/100;
+    const ops=uniqueNumericOptions(pct,[
+      Math.round((red/total)*10000)/100,
+      Math.round((blue/total)*10000)/100,
+      Math.round(((red*blue)/(total*(total-1)))*10000)/100,
+      Math.round(((red*(red-1))/(total*(total-1)))*10000)/100
+    ]).map(v=>num(v)+"%");
+    out.push({q:"Uma urna contém "+red+" bolas vermelhas e "+blue+" azuis. Duas bolas são retiradas sucessivamente, sem reposição. Qual é a probabilidade de sair exatamente uma bola vermelha?",o:ops,a:0,e:"Há dois casos: vermelha-azul ou azul-vermelha. A probabilidade total é 2×"+red+"×"+blue+" ÷ ("+total+"×"+(total-1)+") = "+num(pct)+"%."});
   }
-  // Arranjos com bloco: 30.
+  // Combinações com restrição: 30 questões.
   for(let i=0;i<30;i++){
-    const n=5+(i%4);
-    let fact=1; for(let j=2;j<=n-1;j++) fact*=j;
-    const ans=fact*2;
-    const ops=uniqueNumericOptions(ans,[fact,n*fact,ans/2,ans+n,ans*2]).map(num);
-    out.push({q:n+" pessoas distintas formarão uma fila. Duas pessoas específicas devem permanecer juntas. Quantas filas diferentes são possíveis?",o:ops,a:0,e:"As duas pessoas formam um bloco. Assim, há "+(n-1)+" unidades para ordenar: ("+(n-1)+")! maneiras, multiplicadas por 2 ordens internas do bloco, totalizando "+ans+"."});
+    const men=5+i, women=4+(i%8);
+    const ans=women*(men*(men-1)/2);
+    const ops=uniqueNumericOptions(ans,[
+      (men*(men-1)/2),
+      women*men,
+      (women*(women-1)/2)*men,
+      ans+women,
+      ans-men
+    ]).map(num);
+    out.push({q:"Uma comissão de 3 pessoas será formada a partir de "+men+" homens e "+women+" mulheres. Quantas comissões distintas podem ser formadas com exatamente 1 mulher?",o:ops,a:0,e:"Escolhe-se 1 das "+women+" mulheres e 2 dos "+men+" homens: C("+women+",1)×C("+men+",2) = "+women+"×"+(men*(men-1)/2)+" = "+ans+"."});
   }
   return out;
 }
