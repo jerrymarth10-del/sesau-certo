@@ -83,6 +83,14 @@
     JR_HARD_BANK[key].push.apply(JR_HARD_BANK[key], JR_HARD_EXTRA[key]);
   });
 
+  // Banco ampliado: 180 questões autorais por disciplina, no estilo de cobrança IDECAN.
+  // Carregado antes deste arquivo por quiz-megabank.js.
+  const JR_MEGA_BANK=(typeof window!=="undefined" && window.JR_MEGA_BANK) ? window.JR_MEGA_BANK : {};
+  Object.keys(JR_MEGA_BANK).forEach(function(key){
+    if(!JR_HARD_BANK[key]) JR_HARD_BANK[key]=[];
+    JR_HARD_BANK[key].push.apply(JR_HARD_BANK[key], JR_MEGA_BANK[key]);
+  });
+
   function shuffle(list){
     const a = list.slice();
     for(let i=a.length-1;i>0;i--){
