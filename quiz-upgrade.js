@@ -2,14 +2,16 @@
   "use strict";
 
   const ROUND_SIZE = 12;
-  const HARD_PER_ROUND = 8;
-  const STORAGE_PREFIX = "jr_quiz_rotation_v4_";
+  const HARD_PER_ROUND = 12;
+  const AUTO_NEXT_MS = 6500;
+  const STORAGE_PREFIX = "jr_quiz_rotation_v5_";
   const SUBJECT_QUIZ_KEY = Object.freeze({
     portugues:"portugues",
     rlm:"rlm",
     informatica:"informatica",
     sus:"sus",
-    rondonia:"rondonia"
+    rondonia:"rondonia",
+    idecan:"idecan"
   });
 
   const JR_HARD_BANK = {
@@ -108,7 +110,7 @@
   }
 
   function saveSeen(key, seen){
-    try{ localStorage.setItem(STORAGE_PREFIX+key, JSON.stringify(seen.slice(-180))); }catch(e){}
+    try{ localStorage.setItem(STORAGE_PREFIX+key, JSON.stringify(seen.slice(-500))); }catch(e){}
   }
 
   function isTooEasy(item, quizKey){
@@ -184,9 +186,13 @@
     const advancedBase=baseRaw.filter(x=>!isTooEasy(x,quizKey));
     const seen=loadSeen(quizKey);
 
+    // Prioridade total para o banco avançado e específico da disciplina.
+    // O banco antigo só entra como reserva se a área não tiver 12 itens avançados disponíveis.
     const hardPick=freshPick(hard,Math.min(HARD_PER_ROUND,hard.length),quizKey,seen);
     const baseNeeded=Math.max(0,ROUND_SIZE-hardPick.length);
-    const basePick=freshPick(advancedBase,baseNeeded,quizKey,seen);
+    const hardIds=new Set(hard.map(sig));
+    const reserve=advancedBase.filter(item=>!hardIds.has(sig(item)));
+    const basePick=baseNeeded ? freshPick(reserve,baseNeeded,quizKey,seen) : [];
 
     const merged=[];
     const ids=new Set();
@@ -196,7 +202,7 @@
     });
 
     if(merged.length<ROUND_SIZE){
-      const refill=shuffle(hard.concat(advancedBase))
+      const refill=shuffle(hard.concat(reserve))
         .filter(item=>!ids.has(sig(item)))
         .slice(0,ROUND_SIZE-merged.length);
       refill.forEach(item=>{ ids.add(sig(item)); merged.push(item); });
@@ -211,9 +217,9 @@
     const panel=box && box.closest(".quiz-panel");
     if(!panel) return;
     const head=panel.querySelector(".quiz-head span:last-child");
-    if(head) head.textContent=ROUND_SIZE+" questões por rodada • nível alto • banco renovado";
+    if(head) head.textContent=ROUND_SIZE+" questões por rodada • nível avançado • rotação automática";
     const p=panel.querySelector(".quiz-intro p");
-    if(p) p.textContent="Cada nova rodada traz questões exclusivamente desta disciplina, em ordem renovada, com alternativas embaralhadas, nível mais alto e cobrança inspirada no estilo IDECAN.";
+    if(p) p.textContent="Questões exclusivamente desta disciplina, com banco avançado, alternativas embaralhadas e cobrança inspirada no estilo IDECAN. Após responder, a próxima questão chega automaticamente.";
   }
 
   window.startQuiz=function(subjectId, quizKey){
@@ -222,7 +228,8 @@
     if(!safeKey || !JR_HARD_BANK[safeKey]) return;
     const questions=buildRound(safeKey);
     if(!questions.length) return;
-    quizState[subjectId]={index:0,score:0,answered:false,quizKey:safeKey,questions};
+    if(quizState[subjectId] && quizState[subjectId].autoTimer) clearTimeout(quizState[subjectId].autoTimer);
+    quizState[subjectId]={index:0,score:0,answered:false,quizKey:safeKey,questions,autoTimer:null};
     updateIntro(subjectId);
     document.getElementById("quiz-result-"+subjectId).classList.add("hidden");
     document.getElementById("quiz-box-"+subjectId).classList.remove("hidden");
@@ -231,10 +238,11 @@
 
   window.jrRenderQuestion=function(subjectId){
     const state=quizState[subjectId];
+    if(state && state.autoTimer){ clearTimeout(state.autoTimer); state.autoTimer=null; }
     const quiz=state.questions||[];
     const item=quiz[state.index];
     if(!item) return;
-    document.getElementById("quiz-title-"+subjectId).textContent="Desafio • "+findSubjectTitle(subjectId)+" • estilo IDECAN";
+    document.getElementById("quiz-title-"+subjectId).textContent="Desafio avançado • "+findSubjectTitle(subjectId)+" • estilo IDECAN";
     document.getElementById("quiz-progress-"+subjectId).textContent="Questão "+(state.index+1)+" de "+quiz.length;
     document.getElementById("quiz-bar-"+subjectId).style.width=(((state.index+1)/quiz.length)*100)+"%";
     document.getElementById("quiz-question-"+subjectId).textContent=item.q;
@@ -277,12 +285,22 @@
     }
     feedback.classList.remove("hidden");
     nextBtn.classList.remove("hidden");
-    nextBtn.textContent=state.index===quiz.length-1?"Ver resultado":"Próxima";
+    nextBtn.textContent=state.index===quiz.length-1?"Ver resultado agora":"Próxima agora";
+    state.autoTimer=setTimeout(function(){
+      state.autoTimer=null;
+      if(state.index<quiz.length-1){
+        state.index++;
+        window.jrRenderQuestion(subjectId);
+      }else{
+        window.jrShowQuizResult(subjectId);
+      }
+    },AUTO_NEXT_MS);
   };
 
   window.nextQuestion=function(subjectId){
     const state=quizState[subjectId];
     if(!state) return;
+    if(state.autoTimer){ clearTimeout(state.autoTimer); state.autoTimer=null; }
     const quiz=state.questions||[];
     if(state.index<quiz.length-1){
       state.index++;
@@ -294,6 +312,7 @@
 
   window.jrShowQuizResult=function(subjectId){
     const state=quizState[subjectId];
+    if(state && state.autoTimer){ clearTimeout(state.autoTimer); state.autoTimer=null; }
     const quiz=state.questions||[];
     const total=quiz.length||1;
     const percent=Math.round((state.score/total)*100);
@@ -310,7 +329,7 @@
       "<p>Você acertou <strong>"+state.score+" de "+total+"</strong> questões em <strong>"+findSubjectTitle(subjectId)+"</strong>.</p>"+
       "<p>Aproveitamento: <strong>"+percent+"%</strong>. "+performance+"</p>"+
       '<div class="quiz-actions">'+
-      '<button class="btn btn-primary btn-small" onclick="startQuiz(\''+subjectId+'\',\''+state.quizKey+'\')">Nova rodada</button>'+
+      '<button class="btn btn-primary btn-small" onclick="startQuiz(\''+subjectId+'\',\''+state.quizKey+'\')">Continuar com novas questões</button>'+
       '<button class="btn btn-outline btn-small" onclick="closeQuiz(\''+subjectId+'\')">Fechar</button>'+
       "</div>";
   };
