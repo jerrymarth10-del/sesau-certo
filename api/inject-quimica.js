@@ -414,8 +414,11 @@ module.exports = async function handler(req, res) {
       html = html.replace('</body>', loginUxFix + '</body>');
     }
 
+    if (!html.includes('quiz-megabank.js')) {
+      html = html.replace('</body>', '<script src="/quiz-megabank.js?v=1"></script></body>');
+    }
     if (!html.includes('quiz-upgrade.js')) {
-      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=5"></script></body>');
+      html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=6"></script></body>');
     }
 
     res.statusCode = 200;
