@@ -240,10 +240,6 @@ module.exports = async function handler(req, res) {
       .replace(
         '<input type="password" id="senha" placeholder="Digite sua senha" />',
         '<input type="password" id="senha" name="password" autocomplete="current-password" placeholder="Digite sua senha" />'
-      )
-      .replace(
-        '<div class="login-meta">\n                <span class="login-status">● Ambiente seguro</span>\n                \n              </div>',
-        '<div class="login-meta">\n                <span class="login-status">● Ambiente seguro</span>\n                <label class="jr-save-login" for="jrSaveLogin"><input type="checkbox" id="jrSaveLogin" /> <span>Salvar login neste navegador</span></label>\n              </div>'
       );
 
     if (!html.includes('jr-login-fix-v1')) {
