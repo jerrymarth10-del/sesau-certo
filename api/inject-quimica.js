@@ -261,7 +261,7 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="agente-endemias"')) {
       const endemiasCard = `
-<a class="especifica-card-link" data-jr-card="agente-endemias" href="https://especificas-premium.vercel.app/?area=endemias&v=2" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="agente-endemias" href="/api/area-entry?area=endemias" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${ENDEMIAS_CARD_BASE64}" alt="Agente de Combate às Endemias" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
     <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
@@ -645,8 +645,8 @@ module.exports = async function handler(req, res) {
         ['Biomedicina', 'biomedicina'],
         ['Psicologia', 'psicologia'],
         ['Agente de Saúde e Fiscal Sanitário', 'acsfiscal'],
-        ['Clínico Geral Medicina', 'clinico'],
-        ['Educação Física', 'educacaofisica']
+        ['Agente de Combate às Endemias', 'endemias'],
+        ['Clínico Geral Medicina', 'clinico']
       ];
 
       healthCardRoutes.forEach(function(route) {
