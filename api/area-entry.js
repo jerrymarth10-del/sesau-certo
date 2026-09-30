@@ -66,7 +66,7 @@ module.exports=async function handler(req,res){
   try{
     const session=sessionFromRequest(req);
     const email=String(session?.email||"").trim().toLowerCase();
-    if(!email || !/^\S+@\S+\.\S+$/.test(email)){
+    if(!email || !/^\S+@\S+\.\S+$/.test(email) || session.purchasedArea!==area){
       res.statusCode=302;
       res.setHeader("Location",fallback);
       return res.end();
