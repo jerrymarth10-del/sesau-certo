@@ -37,7 +37,7 @@ async function verifyPurchase(token,buyerIp,req){
     if(!response.ok || !data?.ok) return null;
     const email=String(data.email||"").trim().toLowerCase();
     if(data.product!==PRODUCT_ID || !/^\S+@\S+\.\S+$/.test(email)) return null;
-    return {email,paymentId:String(data.paymentId||"")};
+    return {email,paymentId:String(data.paymentId||""),area:String(data.area||"").trim().toLowerCase()};
   }finally{
     clearTimeout(timer);
   }
@@ -72,7 +72,7 @@ module.exports = async function handler(req,res){
     }
 
     const maxAgeSeconds=60*60*24*30;
-    const session=createToken(purchase.email,maxAgeSeconds);
+    const session=createToken(purchase.email,maxAgeSeconds,purchase.area);
     setSessionCookie(res,session,maxAgeSeconds);
 
     res.statusCode=303;
