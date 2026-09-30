@@ -2,7 +2,7 @@ const { verifyAreaTicket } = require("./_auth");
 
 const HEALTH_AREAS = new Set([
   "radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio",
-  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","educacaofisica","clinico"
+  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","clinico"
 ]);
 
 module.exports=async function handler(req,res){
