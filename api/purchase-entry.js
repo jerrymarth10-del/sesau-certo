@@ -3,17 +3,33 @@ const { createToken, setSessionCookie } = require("./_auth");
 const VERIFY_URL = "https://vendiro.com.br/api/sesau/verify-access";
 const PRODUCT_ID = "sesau-ro-completo";
 
-async function verifyPurchase(token){
+function clientIp(req){
+  const raw=String(req.headers["x-forwarded-for"]||"").split(",")[0].trim() || String(req.headers["x-real-ip"]||"").trim();
+  return raw.length<=64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
+}
+
+function serviceToken(){
+  const token=String(process.env.VERCEL_OIDC_TOKEN||"").trim();
+  if(!token && String(process.env.VERCEL_ENV||"").toLowerCase()==="production"){
+    throw new Error("Identidade interna da Vercel indisponível.");
+  }
+  return token;
+}
+
+async function verifyPurchase(token,buyerIp){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),15000);
   try{
+    const oidc=serviceToken();
     const response=await fetch(VERIFY_URL,{
       method:"POST",
       cache:"no-store",
       signal:controller.signal,
       headers:{
         "Content-Type":"application/json",
-        "Accept":"application/json"
+        "Accept":"application/json",
+        ...(oidc?{"Authorization":"Bearer "+oidc}:{}),
+        "X-JR-Client-IP":buyerIp
       },
       body:JSON.stringify({token:String(token||"")})
     });
@@ -38,6 +54,9 @@ module.exports = async function handler(req,res){
     return res.status(405).send("Método não permitido.");
   }
 
+  const length=Number(req.headers["content-length"]||0);
+  if(length>12288) return res.status(413).send("Requisição muito grande.");
+
   try{
     const body=typeof req.body==="string"
       ? Object.fromEntries(new URLSearchParams(req.body))
@@ -47,7 +66,7 @@ module.exports = async function handler(req,res){
       return res.status(401).send("Liberação inválida ou expirada. Volte ao checkout e confirme o pagamento novamente.");
     }
 
-    const purchase=await verifyPurchase(token);
+    const purchase=await verifyPurchase(token,clientIp(req));
     if(!purchase){
       return res.status(401).send("Pagamento não confirmado ou liberação expirada. Volte ao checkout e confirme novamente.");
     }
