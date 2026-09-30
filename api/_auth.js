@@ -20,6 +20,35 @@ function sign(payload) {
   return crypto.createHmac("sha256", getSecret()).update(payload).digest("base64url");
 }
 
+function signArea(payload) {
+  return crypto.createHmac("sha256", getSecret())
+    .update("jr-area-ticket-v1." + payload)
+    .digest("base64url");
+}
+
+function createAreaTicket(area, maxAgeSeconds = 60 * 60 * 24 * 30) {
+  const payload = Buffer.from(JSON.stringify({
+    typ: "area-access",
+    area: String(area || "").slice(0, 80),
+    jti: crypto.randomBytes(12).toString("base64url"),
+    exp: Date.now() + maxAgeSeconds * 1000
+  })).toString("base64url");
+  return payload + "." + signArea(payload);
+}
+
+function verifyAreaTicket(token) {
+  if (!token || !token.includes(".")) return null;
+  const [payload, signature] = String(token).split(".");
+  if (!payload || !signature || !safeEqual(signature, signArea(payload))) return null;
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    if (data.typ !== "area-access" || !data.area || !data.exp || Date.now() > Number(data.exp)) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 function createToken(email, maxAgeSeconds = MAX_AGE_SECONDS) {
   const payload = Buffer.from(JSON.stringify({
     email: String(email || "").slice(0, 180),
@@ -68,6 +97,8 @@ module.exports = {
   COOKIE_NAME,
   safeEqual,
   createToken,
+  createAreaTicket,
+  verifyAreaTicket,
   sessionFromRequest,
   setSessionCookie,
   clearSessionCookie
