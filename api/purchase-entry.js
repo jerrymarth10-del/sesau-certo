@@ -8,19 +8,19 @@ function clientIp(req){
   return raw.length<=64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
 }
 
-function serviceToken(){
-  const token=String(process.env.VERCEL_OIDC_TOKEN||"").trim();
+function serviceToken(req){
+  const token=String(req.headers["x-vercel-oidc-token"]||process.env.VERCEL_OIDC_TOKEN||"").trim();
   if(!token && String(process.env.VERCEL_ENV||"").toLowerCase()==="production"){
     throw new Error("Identidade interna da Vercel indisponível.");
   }
   return token;
 }
 
-async function verifyPurchase(token,buyerIp){
+async function verifyPurchase(token,buyerIp,req){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),15000);
   try{
-    const oidc=serviceToken();
+    const oidc=serviceToken(req);
     const response=await fetch(VERIFY_URL,{
       method:"POST",
       cache:"no-store",
@@ -66,7 +66,7 @@ module.exports = async function handler(req,res){
       return res.status(401).send("Liberação inválida ou expirada. Volte ao checkout e confirme o pagamento novamente.");
     }
 
-    const purchase=await verifyPurchase(token,clientIp(req));
+    const purchase=await verifyPurchase(token,clientIp(req),req);
     if(!purchase){
       return res.status(401).send("Pagamento não confirmado ou liberação expirada. Volte ao checkout e confirme novamente.");
     }
