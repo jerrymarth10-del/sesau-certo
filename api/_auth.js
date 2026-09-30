@@ -49,9 +49,10 @@ function verifyAreaTicket(token) {
   }
 }
 
-function createToken(email, maxAgeSeconds = MAX_AGE_SECONDS) {
+function createToken(email, maxAgeSeconds = MAX_AGE_SECONDS, purchasedArea = "") {
   const payload = Buffer.from(JSON.stringify({
     email: String(email || "").slice(0, 180),
+    purchasedArea: String(purchasedArea || "").slice(0, 80),
     exp: Date.now() + maxAgeSeconds * 1000
   })).toString("base64url");
   return payload + "." + sign(payload);
