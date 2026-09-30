@@ -1,3 +1,4 @@
+// SESAU purchase bridge - production entry.
 const crypto = require("crypto");
 const { createToken, setSessionCookie } = require("./_auth");
 
