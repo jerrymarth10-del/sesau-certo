@@ -4,7 +4,7 @@ const VERIFY_ENTITLEMENT_URL = "https://vendiro.com.br/api/sesau/verify-entitlem
 const PROJECT2_URL = "https://especificas-premium.vercel.app";
 const HEALTH_AREAS = new Set([
   "radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio",
-  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","educacaofisica","clinico"
+  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","clinico"
 ]);
 
 function serviceToken(req){
