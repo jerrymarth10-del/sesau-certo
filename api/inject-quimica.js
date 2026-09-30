@@ -630,6 +630,45 @@ module.exports = async function handler(req, res) {
       html = html.replace('</body>', '<script src="/quiz-upgrade.js?v=6"></script></body>');
     }
 
+    // SESAU: os cards de saúde continuam leves no Projeto 1 e passam pelo bridge de autorização.
+    // Se o aluno tiver compra aprovada da área, recebe um ticket; caso contrário, o Projeto 2 mantém a senha antiga.
+    if (!html.includes('data-jr-health-routed="1"')) {
+      const healthCardRoutes = [
+        ['Enfermagem', 'enfermagem'],
+        ['Téc. Enfermagem', 'tecnico'],
+        ['Radiologia', 'radiologia'],
+        ['Nutrição', 'nutricao'],
+        ['Farmácia', 'farmaceutico'],
+        ['Odontologia', 'odontologia'],
+        ['Fisioterapia', 'fisioterapia'],
+        ['Téc. de Laboratório', 'laboratorio'],
+        ['Biomedicina', 'biomedicina'],
+        ['Psicologia', 'psicologia'],
+        ['Agente de Saúde e Fiscal Sanitário', 'acsfiscal'],
+        ['Clínico Geral Medicina', 'clinico'],
+        ['Educação Física', 'educacaofisica']
+      ];
+
+      healthCardRoutes.forEach(function(route) {
+        const alt = route[0];
+        const area = route[1];
+        const needle = 'alt="' + alt + '"';
+        const imageAt = html.indexOf(needle);
+        if (imageAt < 0) return;
+        const linkStart = html.lastIndexOf('<a ', imageAt);
+        if (linkStart < 0) return;
+        const linkEnd = html.indexOf('>', linkStart);
+        if (linkEnd < 0 || linkEnd > imageAt) return;
+        let tag = html.slice(linkStart, linkEnd + 1);
+        if (!/class="[^"]*especifica-card-link/.test(tag)) return;
+        tag = tag.replace(/href="[^"]*"/, 'href="/api/area-entry?area=' + area + '"');
+        if (!tag.includes('data-jr-health-routed=')) {
+          tag = tag.replace('class="especifica-card-link"', 'class="especifica-card-link" data-jr-health-routed="1" data-jr-area="' + area + '"');
+        }
+        html = html.slice(0, linkStart) + tag + html.slice(linkEnd + 1);
+      });
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
