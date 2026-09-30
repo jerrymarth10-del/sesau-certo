@@ -7,8 +7,8 @@ function clientIp(req){
   return raw.length<=64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
 }
 
-function serviceToken(){
-  const token=String(process.env.VERCEL_OIDC_TOKEN||"").trim();
+function serviceToken(req){
+  const token=String(req.headers["x-vercel-oidc-token"]||process.env.VERCEL_OIDC_TOKEN||"").trim();
   if(!token && String(process.env.VERCEL_ENV||"").toLowerCase()==="production"){
     throw new Error("Identidade interna da Vercel indisponível.");
   }
@@ -19,7 +19,7 @@ async function allowAttempt(req){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),8000);
   try{
-    const oidc=serviceToken();
+    const oidc=serviceToken(req);
     const response=await fetch(GUARD_URL,{
       method:"POST",
       cache:"no-store",
