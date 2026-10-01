@@ -1,7 +1,10 @@
 const { createToken, setSessionCookie } = require("./_auth");
 
-const VERIFY_URL = "https://vendiro.com.br/api/sesau/verify-access";
-const PRODUCT_ID = "sesau-ro-completo";
+const VERIFY_URLS = [
+  "https://vendiro.com.br/api/sesau/verify-access",
+  "https://vendiro.com.br/api/semusa/verify-access"
+];
+const PRODUCT_IDS = new Set(["sesau-ro-completo","semusa-pvh-2026"]);
 
 function clientIp(req){
   const raw=String(req.headers["x-forwarded-for"]||"").split(",")[0].trim() || String(req.headers["x-real-ip"]||"").trim();
@@ -18,26 +21,42 @@ function serviceToken(req){
 
 async function verifyPurchase(token,buyerIp,req){
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),15000);
+  const timer=setTimeout(()=>controller.abort(),20000);
   try{
     const oidc=serviceToken(req);
-    const response=await fetch(VERIFY_URL,{
-      method:"POST",
-      cache:"no-store",
-      signal:controller.signal,
-      headers:{
-        "Content-Type":"application/json",
-        "Accept":"application/json",
-        ...(oidc?{"Authorization":"Bearer "+oidc}:{}),
-        "X-JR-Client-IP":buyerIp
-      },
-      body:JSON.stringify({token:String(token||"")})
-    });
-    const data=await response.json().catch(()=>null);
-    if(!response.ok || !data?.ok) return null;
-    const email=String(data.email||"").trim().toLowerCase();
-    if(data.product!==PRODUCT_ID || !/^\S+@\S+\.\S+$/.test(email)) return null;
-    return {email,paymentId:String(data.paymentId||""),area:String(data.area||"").trim().toLowerCase()};
+    for(const verifyUrl of VERIFY_URLS){
+      let response;
+      try{
+        response=await fetch(verifyUrl,{
+          method:"POST",
+          cache:"no-store",
+          signal:controller.signal,
+          headers:{
+            "Content-Type":"application/json",
+            "Accept":"application/json",
+            ...(oidc?{"Authorization":"Bearer "+oidc}:{}),
+            "X-JR-Client-IP":buyerIp
+          },
+          body:JSON.stringify({token:String(token||"")})
+        });
+      }catch(err){
+        if(err?.name==="AbortError") throw err;
+        continue;
+      }
+
+      const data=await response.json().catch(()=>null);
+      if(!response.ok || !data?.ok) continue;
+
+      const email=String(data.email||"").trim().toLowerCase();
+      if(!PRODUCT_IDS.has(String(data.product||"")) || !/^\S+@\S+\.\S+$/.test(email)) continue;
+
+      return {
+        email,
+        paymentId:String(data.paymentId||""),
+        area:String(data.area||"").trim().toLowerCase()
+      };
+    }
+    return null;
   }finally{
     clearTimeout(timer);
   }
