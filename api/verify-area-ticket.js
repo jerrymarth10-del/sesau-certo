@@ -1,9 +1,6 @@
 const { verifyAreaTicket } = require("./_auth");
 
-const HEALTH_AREAS = new Set([
-  "radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio",
-  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","clinico"
-]);
+const { HEALTH_AREAS, hasEntitlement } = require("./_entitlement");
 
 module.exports=async function handler(req,res){
   res.setHeader("Cache-Control","no-store, max-age=0");
@@ -28,6 +25,9 @@ module.exports=async function handler(req,res){
     const area=String(data?.area||"").trim().toLowerCase();
     if(!data || !HEALTH_AREAS.has(area)) return res.status(401).json({ok:false});
 
+    if (!(await hasEntitlement(data.email,area,req))) {
+      return res.status(401).json({ok:false});
+    }
     return res.status(200).json({ok:true,area,exp:Number(data.exp||0)});
   }catch(err){
     return res.status(400).json({ok:false});

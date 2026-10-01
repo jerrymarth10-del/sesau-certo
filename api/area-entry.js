@@ -1,51 +1,10 @@
 const { sessionFromRequest, createAreaTicket } = require("./_auth");
 
-const VERIFY_ENTITLEMENT_URL = "https://vendiro.com.br/api/sesau/verify-entitlement";
+const { HEALTH_AREAS, hasEntitlement } = require("./_entitlement");
 const PROJECT2_URL = "https://especificas-premium.vercel.app";
-const HEALTH_AREAS = new Set([
-  "radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio",
-  "nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","clinico"
-]);
-
-function serviceToken(req){
-  const token=String(req.headers["x-vercel-oidc-token"]||process.env.VERCEL_OIDC_TOKEN||"").trim();
-  if(!token && String(process.env.VERCEL_ENV||"").toLowerCase()==="production"){
-    throw new Error("Identidade interna da Vercel indisponível.");
-  }
-  return token;
-}
-
-function clientIp(req){
-  const raw=String(req.headers["x-forwarded-for"]||"").split(",")[0].trim() || String(req.headers["x-real-ip"]||"").trim();
-  return raw.length<=64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
-}
 
 function legacyUrl(area){
   return PROJECT2_URL + "/?area=" + encodeURIComponent(area);
-}
-
-async function hasEntitlement(email,area,req){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),10000);
-  try{
-    const oidc=serviceToken(req);
-    const response=await fetch(VERIFY_ENTITLEMENT_URL,{
-      method:"POST",
-      cache:"no-store",
-      signal:controller.signal,
-      headers:{
-        "Content-Type":"application/json",
-        "Accept":"application/json",
-        ...(oidc?{"Authorization":"Bearer "+oidc}:{}),
-        "X-JR-Client-IP":clientIp(req)
-      },
-      body:JSON.stringify({email,area})
-    });
-    const data=await response.json().catch(()=>null);
-    return !!(response.ok && data?.ok && data?.entitled && data?.area===area);
-  }finally{
-    clearTimeout(timer);
-  }
 }
 
 module.exports=async function handler(req,res){
@@ -79,7 +38,7 @@ module.exports=async function handler(req,res){
       return res.end();
     }
 
-    const ticket=createAreaTicket(area,60*60*24*30);
+    const ticket=createAreaTicket(area,Math.min(60*60*24*30, Math.floor((session.exp-Date.now())/1000)),email);
     res.statusCode=302;
     res.setHeader("Location",fallback+"#jr_area_ticket="+encodeURIComponent(ticket));
     return res.end();

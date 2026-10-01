@@ -26,9 +26,12 @@ function signArea(payload) {
     .digest("base64url");
 }
 
-function createAreaTicket(area, maxAgeSeconds = 60 * 60 * 24 * 30) {
+function createAreaTicket(area, maxAgeSeconds = 60 * 60 * 24 * 30, email = "") {
+  const buyerEmail = String(email).trim().toLowerCase();
+  if (!/^\S+@\S+\.\S+$/.test(buyerEmail)) throw new Error("Comprador inválido");
   const payload = Buffer.from(JSON.stringify({
     typ: "area-access",
+    email: buyerEmail,
     area: String(area || "").slice(0, 80),
     jti: crypto.randomBytes(12).toString("base64url"),
     exp: Date.now() + maxAgeSeconds * 1000
@@ -38,11 +41,14 @@ function createAreaTicket(area, maxAgeSeconds = 60 * 60 * 24 * 30) {
 
 function verifyAreaTicket(token) {
   if (!token || !token.includes(".")) return null;
-  const [payload, signature] = String(token).split(".");
+  const parts = String(token).split(".");
+  if (parts.length !== 2) return null;
+  const [payload, signature] = parts;
   if (!payload || !signature || !safeEqual(signature, signArea(payload))) return null;
   try {
     const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
-    if (data.typ !== "area-access" || !data.area || !data.exp || Date.now() > Number(data.exp)) return null;
+    if (data.typ !== "area-access" || !data.area || !/^\S+@\S+\.\S+$/.test(String(data.email || "")) ||
+        !Number.isFinite(data.exp) || Date.now() >= data.exp) return null;
     return data;
   } catch {
     return null;
