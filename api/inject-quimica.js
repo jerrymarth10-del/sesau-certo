@@ -208,6 +208,39 @@ module.exports = async function handler(req, res) {
     }
 
 
+
+    // Projeto 1: card separado para o bloco dedicado de Psicologia da SEMUSA no Projeto 2.
+    // O bridge mantém a liberação automática para compras SEMUSA e o fallback antigo por senha.
+    if (!html.includes('data-jr-card="psicologia-semusa"')) {
+      const psicologiaSemusaCard = `
+<a class="especifica-card-link" data-jr-card="psicologia-semusa" data-jr-area="psicologia" href="/api/area-entry?area=psicologia&variant=semusa" target="_blank" rel="noopener">
+  <div class="especifica-card especifica-admin-card jr-specific-card jr-psicologia-semusa-card">
+    <div class="jr-specific-visual" style="background:radial-gradient(circle at 76% 17%,rgba(59,130,246,.32),transparent 29%),radial-gradient(circle at 22% 78%,rgba(14,165,233,.16),transparent 30%),linear-gradient(145deg,#071525 0%,#0b1726 52%,#101b34 100%)">
+      <span class="jr-specific-icon" aria-hidden="true">🧠</span>
+      <span class="jr-specific-lines" aria-hidden="true"></span>
+    </div>
+    <div class="especifica-admin-shade"></div>
+    <div class="especifica-admin-body">
+      <span class="especifica-admin-tag">SEMUSA Porto Velho • IBGP</span>
+      <h3>Psicologia • SEMUSA</h3>
+      <p>Trilha exclusiva com Psicologia da Saúde, SUS, ética profissional, videoaulas, PDFs e provas anteriores da banca IBGP.</p>
+      <span class="especifica-admin-btn">Acessar</span>
+    </div>
+  </div>
+</a>
+`;
+
+      const psicologiaImageAt = html.indexOf('alt="Psicologia"');
+      if (psicologiaImageAt >= 0) {
+        const psicologiaLinkStart = html.lastIndexOf('<a ', psicologiaImageAt);
+        const psicologiaLinkEnd = html.indexOf('</a>', psicologiaImageAt);
+        if (psicologiaLinkStart >= 0 && psicologiaLinkEnd >= 0) {
+          const insertAt = psicologiaLinkEnd + '</a>'.length;
+          html = html.slice(0, insertAt) + '\n' + psicologiaSemusaCard + html.slice(insertAt);
+        }
+      }
+    }
+
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
       const imageSrc = 'data:image/jpeg;base64,' + CHEMISTRY_CARD_BASE64;
 
