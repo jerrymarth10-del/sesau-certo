@@ -702,6 +702,81 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // Psicologia usa um único card no Projeto 1 para evitar duplicidade visual.
+    // O bridge /api/area-entry escolhe automaticamente o bloco correto no Projeto 2:
+    // SESAU -> psicologia | SEMUSA -> psicologiasemusa.
+    if (!html.includes('data-jr-psychology-bridge="sesau-semusa"')) {
+      const psychNeedle = 'alt="Psicologia"';
+      const psychImageAt = html.indexOf(psychNeedle);
+      if (psychImageAt >= 0) {
+        const linkStart = html.lastIndexOf('<a ', psychImageAt);
+        const linkEnd = linkStart >= 0 ? html.indexOf('>', linkStart) : -1;
+        if (linkStart >= 0 && linkEnd > linkStart && linkEnd < psychImageAt) {
+          let tag = html.slice(linkStart, linkEnd + 1);
+          if (/class="[^"]*especifica-card-link/.test(tag)) {
+            tag = tag.replace(
+              'class="especifica-card-link"',
+              'class="especifica-card-link" data-jr-psychology-bridge="sesau-semusa" aria-label="Acessar Psicologia SESAU e SEMUSA"'
+            );
+            html = html.slice(0, linkStart) + tag + html.slice(linkEnd + 1);
+
+            const refreshedImageAt = html.indexOf(psychNeedle, linkStart);
+            if (refreshedImageAt >= 0) {
+              html = html.slice(0, refreshedImageAt) +
+                html.slice(refreshedImageAt).replace('alt="Psicologia"', 'alt="Psicologia SESAU e SEMUSA"');
+
+              const imageAt = html.indexOf('alt="Psicologia SESAU e SEMUSA"', linkStart);
+              const cardStart = imageAt >= 0 ? html.lastIndexOf('<div class="especifica-card"', imageAt) : -1;
+              const cardOpenEnd = cardStart >= 0 ? html.indexOf('>', cardStart) : -1;
+              if (cardOpenEnd >= 0 && cardOpenEnd < imageAt) {
+                html = html.slice(0, cardOpenEnd + 1) +
+                  '<span class="jr-psychology-semusa-badge" aria-hidden="true">SESAU + SEMUSA</span>' +
+                  html.slice(cardOpenEnd + 1);
+              }
+            }
+          }
+        }
+      }
+
+      if (!html.includes('id="jr-psychology-semusa-card-style"')) {
+        const psychStyle = `
+<style id="jr-psychology-semusa-card-style">
+#especificas .especifica-card{position:relative!important}
+#especificas .jr-psychology-semusa-badge{
+  position:absolute!important;
+  z-index:9!important;
+  top:12px!important;
+  left:12px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:30px!important;
+  padding:0 11px!important;
+  border-radius:999px!important;
+  background:rgba(5,15,28,.90)!important;
+  border:1px solid rgba(255,255,255,.24)!important;
+  color:#fff!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(8px)!important;
+}
+@media(max-width:700px){
+  #especificas .jr-psychology-semusa-badge{
+    top:9px!important;
+    left:9px!important;
+    min-height:26px!important;
+    padding:0 9px!important;
+    font-size:9px!important;
+  }
+}
+</style>`;
+        html = html.replace('</head>', psychStyle + '</head>');
+      }
+    }
+
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
     res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
