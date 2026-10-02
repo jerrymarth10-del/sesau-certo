@@ -3,7 +3,10 @@ const { HEALTH_AREAS, hasEntitlement } = require("./_entitlement");
 const PROJECT2_URL="https://especificas-premium.vercel.app";
 const SEMUSA_PRODUCT="semusa-pvh-2026";
 
-function targetAreaFor(product,area){return product===SEMUSA_PRODUCT&&area==="psicologia"?"psicologiasemusa":area;}
+function targetAreaFor(product,area,variant){
+  if(area==="psicologia"&&(product===SEMUSA_PRODUCT||variant==="semusa"))return "psicologiasemusa";
+  return area;
+}
 function legacyUrl(area){return PROJECT2_URL+"/?area="+encodeURIComponent(area);}
 
 module.exports=async function handler(req,res){
@@ -15,8 +18,13 @@ module.exports=async function handler(req,res){
     const session=sessionFromRequest(req);
     const email=String(session?.email||"").trim().toLowerCase();
     const product=String(session?.purchasedProduct||"");
-    const targetArea=targetAreaFor(product,area);
+    const variant=String(req.query?.variant||"").trim().toLowerCase();
+    const semusaVariant=area==="psicologia"&&variant==="semusa";
+    const targetArea=targetAreaFor(product,area,variant);
     const fallback=legacyUrl(targetArea);
+    if(semusaVariant&&product!==SEMUSA_PRODUCT){
+      res.statusCode=302;res.setHeader("Location",fallback);return res.end();
+    }
     if(!email||!/^\S+@\S+\.\S+$/.test(email)||session.purchasedArea!==area){
       res.statusCode=302;res.setHeader("Location",fallback);return res.end();
     }
