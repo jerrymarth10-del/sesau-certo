@@ -45,7 +45,7 @@ function verifyAreaTicket(token){
   }catch{return null;}
 }
 
-function createToken(email,maxAgeSeconds=MAX_AGE_SECONDS,purchasedArea="",purchasedProduct=""){
+function createToken(email,maxAgeSeconds=MAX_AGE_SECONDS,purchasedArea="",purchasedProduct="",purchasedVariant=""){
   const product=PRODUCTS.has(String(purchasedProduct||""))?String(purchasedProduct):"";
   const payload=Buffer.from(JSON.stringify({
     email:String(email||"").slice(0,180),
