@@ -15,6 +15,6 @@
     }
   ],
   "redirects": [
-    { "source": "/", "destination": "/api/inject-catalogo", "permanent": false }
+    { "source": "/", "destination": "/api/inject-quimica", "permanent": false }
   ]
 }
