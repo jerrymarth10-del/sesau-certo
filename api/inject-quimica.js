@@ -6,6 +6,7 @@ const SEFIN_CARD_BASE64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHC
 const { insertAssistenteSocial } = require('../lib/assistente-social');
 const { insertMotorista } = require('../lib/motorista');
 const { insertServicosGerais } = require('../lib/servicos-gerais');
+const { insertPediatria } = require('../lib/pediatria');
 
 module.exports = async function handler(req, res) {
   try {
@@ -746,6 +747,7 @@ module.exports = async function handler(req, res) {
     html = insertAssistenteSocial(html);
     html = insertMotorista(html);
     html = insertServicosGerais(html);
+    html = insertPediatria(html);
     res.end(html);
   } catch (error) {
     res.statusCode = 500;
