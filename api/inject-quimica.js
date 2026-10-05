@@ -241,6 +241,40 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // JR: Área Administrativa compartilhada entre SESAU e SEMUSA.
+    // O acesso continua passando pelo entitlement da compra antes de chegar ao Projeto 2.
+    if (!html.includes('data-jr-card="administrativo"')) {
+      const administrativoCard = `
+<a class="especifica-card-link" data-jr-card="administrativo" data-jr-area="administrativo" href="/api/area-entry?area=administrativo" target="_blank" rel="noopener">
+  <div class="especifica-card especifica-admin-card jr-specific-card jr-administrativo-card">
+    <div class="jr-specific-visual" style="background:radial-gradient(circle at 78% 18%,rgba(14,165,233,.30),transparent 30%),radial-gradient(circle at 22% 80%,rgba(16,185,129,.15),transparent 32%),linear-gradient(145deg,#071826 0%,#0a2538 55%,#0b3147 100%)">
+      <span class="jr-specific-icon" aria-hidden="true">📋</span>
+      <span class="jr-specific-lines" aria-hidden="true"></span>
+    </div>
+    <div class="especifica-admin-shade"></div>
+    <div class="especifica-admin-body">
+      <span class="especifica-admin-tag">SESAU + SEMUSA • Área Administrativa</span>
+      <h3>Área Administrativa</h3>
+      <p>Trilha para cargos administrativos com Administração Pública, Direito Administrativo, legislação, questões e materiais de revisão.</p>
+      <span class="especifica-admin-btn">Acessar</span>
+    </div>
+  </div>
+</a>
+`;
+
+      const sectionStart = html.indexOf('<section id="especificas"');
+      if (sectionStart >= 0) {
+        const sectionEnd = html.indexOf('</section>', sectionStart);
+        if (sectionEnd >= 0) {
+          const gridClose = html.lastIndexOf('</div>', sectionEnd);
+          if (gridClose >= sectionStart) {
+            html = html.slice(0, gridClose) + administrativoCard + html.slice(gridClose);
+          }
+        }
+      }
+    }
+
+
     if (!html.includes('data-jr-card="quimica-seduc-pa"')) {
       const imageSrc = 'data:image/jpeg;base64,' + CHEMISTRY_CARD_BASE64;
 
