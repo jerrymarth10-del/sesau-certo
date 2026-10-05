@@ -1,5 +1,5 @@
 const VERIFY_URL="https://vendiro.com.br/api/sesau/verify-access";
-const HEALTH_AREAS=new Set(["radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio","nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","administrativo","motorista","servicosgerais","clinico"]);
+const HEALTH_AREAS=new Set(["radiologia","enfermagem","tecnico","fisioterapia","farmaceutico","laboratorio","nutricao","biomedicina","odontologia","psicologia","acsfiscal","endemias","administrativo","motorista","servicosgerais","clinico","pediatria"]);
 const PRODUCTS=new Set(["sesau-ro-completo","semusa-pvh-2026"]);
 
 function serviceToken(req){const token=String(req.headers["x-vercel-oidc-token"]||process.env.VERCEL_OIDC_TOKEN||"").trim();if(!token&&String(process.env.VERCEL_ENV||"").toLowerCase()==="production")throw new Error("Identidade interna da Vercel indisponível.");return token;}
