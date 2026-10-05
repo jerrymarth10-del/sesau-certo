@@ -39,7 +39,8 @@ module.exports=async function handler(req,res){
       res.statusCode=302;res.setHeader("Location",requestedFallback);return res.end();
     }
 
-    const variantFromSession=String(session?.purchasedVariant||"").trim().toLowerCase();\n    const targetArea=variantFromSession==="assistentesocial"&&purchasedArea==="acsfiscal"?"assistentesocial":purchasedTargetAreaFor(product,purchasedArea);
+    const variantFromSession=String(session?.purchasedVariant||"").trim().toLowerCase();
+    const targetArea=variantFromSession==="assistentesocial"&&purchasedArea==="acsfiscal"?"assistentesocial":purchasedTargetAreaFor(product,purchasedArea);
     // The copied catalog shares Fiscal's entitlement; the signed ticket remains canonical.
     const viewArea=targetArea==="acsfiscal"&&requestedTarget==="assistentesocial"?requestedTarget:targetArea;
     const purchasedFallback=legacyUrl(viewArea);
