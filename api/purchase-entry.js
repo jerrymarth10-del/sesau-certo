@@ -42,6 +42,7 @@ module.exports=async function handler(req,res){
     const maxAgeSeconds=60*60*24*30;
     const session=createToken(purchase.email,maxAgeSeconds,purchase.area,purchase.product,purchase.variant);
     setSessionCookie(res,session,maxAgeSeconds);
-    res.statusCode=303;res.setHeader("Location","/");return res.end();
+    const directAreaEntry=purchase.area==="acsfiscal"&&purchase.variant!=="assistentesocial";
+    res.statusCode=303;res.setHeader("Location",directAreaEntry?"/api/area-entry?area=acsfiscal":"/");return res.end();
   }catch(err){console.error("Entrada por compra:",err?.message||err);return res.status(500).send("Não foi possível liberar o acesso agora.");}
 };
