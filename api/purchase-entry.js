@@ -23,7 +23,7 @@ async function verifyPurchase(token,buyerIp,req){
       const email=String(data.email||"").trim().toLowerCase();
       const product=String(data.product||"");
       if(!PRODUCT_IDS.has(product)||!/^\S+@\S+\.\S+$/.test(email))continue;
-      return {email,paymentId:String(data.paymentId||""),area:String(data.area||"").trim().toLowerCase(),product};
+      return {email,paymentId:String(data.paymentId||""),area:String(data.area||"").trim().toLowerCase(),product,variant:String(data.variant||"").trim().toLowerCase()};
     }
     return null;
   }finally{clearTimeout(timer);}
@@ -40,7 +40,7 @@ module.exports=async function handler(req,res){
     const purchase=await verifyPurchase(token,clientIp(req),req);
     if(!purchase)return res.status(401).send("Pagamento não confirmado ou liberação expirada. Volte ao checkout e confirme novamente.");
     const maxAgeSeconds=60*60*24*30;
-    const requestedVariant=String(body.variant||"").trim().toLowerCase();\n    const session=createToken(purchase.email,maxAgeSeconds,purchase.area,purchase.product,requestedVariant);
+    const session=createToken(purchase.email,maxAgeSeconds,purchase.area,purchase.product,purchase.variant);
     setSessionCookie(res,session,maxAgeSeconds);
     res.statusCode=303;res.setHeader("Location","/");return res.end();
   }catch(err){console.error("Entrada por compra:",err?.message||err);return res.status(500).send("Não foi possível liberar o acesso agora.");}
