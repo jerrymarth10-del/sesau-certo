@@ -8,6 +8,7 @@ function purchasedTargetAreaFor(product,area){
   return area;
 }
 function requestedTargetAreaFor(area,variant){
+  if(area==="acsfiscal"&&variant==="assistentesocial")return "assistentesocial";
   if(area==="psicologia"&&variant==="semusa")return "psicologiasemusa";
   return area;
 }
@@ -39,7 +40,9 @@ module.exports=async function handler(req,res){
     }
 
     const targetArea=purchasedTargetAreaFor(product,purchasedArea);
-    const purchasedFallback=legacyUrl(targetArea);
+    // The copied catalog shares Fiscal's entitlement; the signed ticket remains canonical.
+    const viewArea=targetArea==="acsfiscal"&&requestedTarget==="assistentesocial"?requestedTarget:targetArea;
+    const purchasedFallback=legacyUrl(viewArea);
     const entitled=await hasEntitlement(email,purchasedArea,req,product);
     if(!entitled){
       res.statusCode=302;res.setHeader("Location",purchasedFallback);return res.end();
