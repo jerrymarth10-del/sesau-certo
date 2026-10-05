@@ -123,7 +123,38 @@ module.exports = async function handler(req, res) {
 `;
     html = html.replace('</head>', loginEnhancement + '</head>');
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
-    if (!html.includes('jr-specific-card-style-v1')) {
+
+    // JR: apresentação neutra para alunos SESAU e SEMUSA, com foco por banca.
+    html = html
+      .replace(/<title>GPSPRO \| Preparatório SESAU<\/title>/g, '<title>JR Aprova | SESAU + SEMUSA</title>')
+      .replace(
+        /<meta name="description" content="Plataforma JR Apostilas com login visual, videoaulas, PDFs e quizzes por matéria para concursos da área da saúde\." \/>/g,
+        '<meta name="description" content="JR Aprova: videoaulas, PDFs, quizzes e questões por disciplina, com trilhas direcionadas para SESAU, SEMUSA, IDECAN e IBGP." />'
+      )
+      .replace(
+        /🏥 Plataforma temática da saúde • Preparatório SESAU/g,
+        '🏥 JR Aprova • SESAU + SEMUSA • Trilhas por banca'
+      )
+      .replace(
+        /Videoaulas, PDFs, reforços por matéria e acesso visual estilo área de membros para organizar seu estudo com mais clareza\./g,
+        'Videoaulas, PDFs, quizzes e questões organizados por disciplina, com reforços direcionados para as bancas IDECAN e IBGP.'
+      )
+      .replace(
+        /<h1>Bem-vindo à sua área de estudos<\/h1>/g,
+        '<h1>Sua preparação, organizada para a sua prova</h1>'
+      )
+      .replace(
+        /Videoaulas, materiais em PDF e quizzes organizados por disciplina, com trilhas extras para IDECAN, SUS e saúde pública\./g,
+        'Videoaulas, PDFs, quizzes e questões comentadas por disciplina, com trilhas específicas para IDECAN, IBGP, SUS e saúde pública.'
+      )
+      .replace(
+        /Cada bloco abaixo reúne um player interno com 30 aulas por disciplina, PDFs organizados e um quiz por matéria\. No bloco IDECAN, a trilha permanece como já estava\./g,
+        'Cada bloco reúne aulas, PDFs e quiz por matéria. Em Português e Raciocínio Lógico você também encontra reforços com questões da banca IBGP, sem perder a trilha IDECAN já disponível.'
+      );
+
+    // JR: reforços IBGP misturados às matérias compatíveis + quiz estratégico próprio.
+    // As questões abaixo são autorais, em formato de treino, e não reproduzem prova protegida.
+    const jrIbgpEnhancement = 
       const cardCss = `
 <style id="jr-specific-card-style-v1">
 .jr-specific-card{position:relative!important;overflow:hidden!important;background:#09101d!important}
