@@ -126,13 +126,13 @@ module.exports = async function handler(req, res) {
 
     // JR: apresentação neutra para alunos SESAU e SEMUSA, com reforços por banca.
     html = html
-      .replace(/<title>GPSPRO \\| Preparatório SESAU<\\/title>/g, '<title>JR Aprova | SESAU + SEMUSA</title>')
-      .replace(/🏥 Plataforma temática da saúde • Preparatório SESAU/g, '🏥 JR Aprova • SESAU + SEMUSA • Trilhas por banca')
-      .replace(/Videoaulas, PDFs, reforços por matéria e acesso visual estilo área de membros para organizar seu estudo com mais clareza\\./g, 'Videoaulas, PDFs, quizzes e questões organizados por disciplina, com reforços direcionados para as bancas IDECAN e IBGP.')
-      .replace(/<h1>Bem-vindo à sua área de estudos<\\/h1>/g, '<h1>Sua preparação, organizada para a sua prova</h1>')
-      .replace(/Videoaulas, materiais em PDF e quizzes organizados por disciplina, com trilhas extras para IDECAN, SUS e saúde pública\\./g, 'Videoaulas, PDFs, quizzes e questões comentadas por disciplina, com trilhas específicas para IDECAN, IBGP, SUS e saúde pública.')
-      .replace(/Cada bloco abaixo reúne um player interno com 30 aulas por disciplina, PDFs organizados e um quiz por matéria\\. No bloco IDECAN, a trilha permanece como já estava\\./g, 'Cada bloco reúne aulas, PDFs e quiz por matéria. Em Português e Raciocínio Lógico você também encontra reforços com questões da banca IBGP, sem perder a trilha IDECAN já disponível.');
-    html = html.replace('</body>', '<script src="/ibgp-enhancement.js?v=20261005-1"></script></body>');
+      .split('<title>GPSPRO | Preparatório SESAU</title>').join('<title>JR Aprova | SESAU + SEMUSA</title>')
+      .split('🏥 Plataforma temática da saúde • Preparatório SESAU').join('🏥 JR Aprova • SESAU + SEMUSA • Trilhas por banca')
+      .split('Videoaulas, PDFs, reforços por matéria e acesso visual estilo área de membros para organizar seu estudo com mais clareza.').join('Videoaulas, PDFs, quizzes e questões organizados por disciplina, com reforços direcionados para as bancas IDECAN e IBGP.')
+      .split('<h1>Bem-vindo à sua área de estudos</h1>').join('<h1>Sua preparação, organizada para a sua prova</h1>')
+      .split('Videoaulas, materiais em PDF e quizzes organizados por disciplina, com trilhas extras para IDECAN, SUS e saúde pública.').join('Videoaulas, PDFs, quizzes e questões comentadas por disciplina, com trilhas específicas para IDECAN, IBGP, SUS e saúde pública.')
+      .split('Cada bloco abaixo reúne um player interno com 30 aulas por disciplina, PDFs organizados e um quiz por matéria. No bloco IDECAN, a trilha permanece como já estava.').join('Cada bloco reúne aulas, PDFs e quiz por matéria. Em Português e Raciocínio Lógico você também encontra reforços com questões da banca IBGP, sem perder a trilha IDECAN já disponível.');
+    html = html.replace('</body>', '<script src="/ibgp-enhancement.js?v=20261005-2"></script></body>');
     if (!html.includes('jr-specific-card-style-v1')) {
       const cardCss = `
 <style id="jr-specific-card-style-v1">
