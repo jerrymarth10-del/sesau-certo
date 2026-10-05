@@ -51,6 +51,7 @@ function createToken(email,maxAgeSeconds=MAX_AGE_SECONDS,purchasedArea="",purcha
     email:String(email||"").slice(0,180),
     purchasedArea:String(purchasedArea||"").slice(0,80),
     purchasedProduct:product,
+    purchasedVariant:String(purchasedVariant||"").slice(0,40),
     exp:Date.now()+maxAgeSeconds*1000
   })).toString("base64url");
   return payload+"."+sign(payload);
