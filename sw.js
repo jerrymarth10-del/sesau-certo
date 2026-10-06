@@ -1,8 +1,6 @@
 const CACHE_NAME = "jr-a-prova-pwa-v5-student-copy";
 const APP_SHELL = [
-  "./",
-  "./index.html",
-  "./especificas.html",
+   "./especificas.html",
   "./manifest.webmanifest",
   "./icon-144.png",
   "./icon-256.png",
@@ -41,15 +39,9 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match(request).then(r => r || caches.match("./index.html")))
-    );
+    // A área do aluno é personalizada (sessão/e-mail/conteúdo liberado).
+    // Nunca guardar navegação em Cache Storage.
+    event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
 
