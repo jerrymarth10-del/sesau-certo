@@ -772,6 +772,15 @@ module.exports = async function handler(req, res) {
     html = insertServicosGerais(html);
     html = insertPediatria(html);
     html = applyFrontHotfix(html);
+
+    // Toda navegação do Projeto 1 para o Projeto 2 passa pela área comprada.
+    // Se houver uma compra SESAU/SEMUSA ativa, o backend ignora o card clicado
+    // e libera somente a área realmente adquirida.
+    html = html.replace(
+      /href="https:\/\/especificas-premium\.vercel\.app\/\?area=([a-z0-9_-]+)[^"]*"/gi,
+      function(_, area){ return 'href="/api/area-entry?area=' + encodeURIComponent(area) + '"'; }
+    );
+
     res.end(html);
   } catch (error) {
     res.statusCode = 500;
