@@ -1,4 +1,4 @@
-const CACHE_NAME = "jr-a-prova-pwa-v4-login-fix";
+const CACHE_NAME = "jr-a-prova-pwa-v5-student-copy";
 const APP_SHELL = [
   "./",
   "./index.html",
