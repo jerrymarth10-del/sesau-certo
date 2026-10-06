@@ -2,6 +2,7 @@ const { sessionFromRequest, createAreaTicket } = require("./_auth");
 const { HEALTH_AREAS, hasEntitlement } = require("./_entitlement");
 const PROJECT2_URL="https://especificas-premium.vercel.app";
 const SEMUSA_PRODUCT="semusa-pvh-2026";
+const LEGACY_AREAS=new Set(["quimica","prf","penal","sefin","pedagogia","supervisao","jiparana","vigilante"]);
 
 function purchasedTargetAreaFor(product,area){
   if(area==="psicologia"&&product===SEMUSA_PRODUCT)return "psicologiasemusa";
@@ -20,7 +21,8 @@ module.exports=async function handler(req,res){
 
   const requestedArea=String(req.query?.area||"").trim().toLowerCase();
   const variant=String(req.query?.variant||"").trim().toLowerCase();
-  if(!HEALTH_AREAS.has(requestedArea))return res.status(400).send("Área inválida.");
+  const requestedKnown=HEALTH_AREAS.has(requestedArea)||LEGACY_AREAS.has(requestedArea);
+  if(!requestedKnown)return res.status(400).send("Área inválida.");
 
   const requestedTarget=requestedTargetAreaFor(requestedArea,variant);
   const requestedFallback=legacyUrl(requestedTarget);
