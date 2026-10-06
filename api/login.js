@@ -65,8 +65,14 @@ module.exports = async function handler(req, res) {
   }
 
   const { email, senha, lembrar } = req.body || {};
-  const normalizedEmail=String(email||"").trim().toLowerCase().slice(0,180);
-  const rawPassword=String(senha||"");
+  const normalizedEmail=String(email||"")
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .trim()
+    .toLowerCase()
+    .slice(0,180);
+  const rawPassword=String(senha||"")
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .trim();
 
   if (!/^\S+@\S+\.\S+$/.test(normalizedEmail) || !rawPassword || rawPassword.length>256) {
     return res.status(400).json({ok:false, message:"Informe e-mail e senha válidos."});
