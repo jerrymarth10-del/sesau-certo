@@ -124,14 +124,24 @@ module.exports = async function handler(req, res) {
     html = html.replace('</head>', loginEnhancement + '</head>');
     html = html.replace('<head>', '<head><script>try{history.replaceState(null,\"\",\"/\")}catch(e){}</script>');
 
-    // JR: apresentação neutra para alunos SESAU e SEMUSA, com reforços por banca.
+    // JR: apresentação neutra para alunos SESAU e SEMUSA.
+    // A página-base ainda chega com textos antigos de SESAU/IDECAN;
+    // estes replaces transformam a resposta final antes de enviá-la ao aluno.
     html = html
-      .split('<title>JR Aprova | Área do Aluno</title>').join('<title>JR Aprova | Área do Aluno</title>')
-      .split('🎓 JR Aprova • Área do Aluno').join('🎓 JR Aprova • Área do Aluno')
-      .split('Estude em um só lugar com videoaulas, PDFs, quizzes, provas anteriores e conteúdos específicos do seu cargo.').join('Estude em um só lugar com videoaulas, PDFs, quizzes, provas anteriores e conteúdos específicos do seu cargo.')
-      .split('<h1>Seu preparatório está aqui</h1>').join('<h1>Seu preparatório está aqui</h1>')
-      .split('Videoaulas, PDFs, quizzes e questões organizados para a sua preparação, com conteúdos direcionados ao concurso, à banca e ao cargo escolhido.').join('Videoaulas, PDFs, quizzes e questões organizados para a sua preparação, com conteúdos direcionados ao concurso, à banca e ao cargo escolhido.')
-      .split('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.').join('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.');
+      .split('<title>GPSPRO | Preparatório SESAU</title>').join('<title>JR Aprova | Área do Aluno</title>')
+      .split('<title>JR Aprova | SESAU + SEMUSA</title>').join('<title>JR Aprova | Área do Aluno</title>')
+      .split('🏥 Plataforma temática da saúde • Preparatório SESAU').join('🎓 JR Aprova • Área do Aluno')
+      .split('🏥 JR Aprova • SESAU + SEMUSA • Trilhas por banca').join('🎓 JR Aprova • Área do Aluno')
+      .split('PLATAFORMA PREMIUM').join('ÁREA DO ALUNO')
+      .split('JR Apostilas').join('JR Aprova')
+      .split('<h1>Bem-vindo à sua área de estudos</h1>').join('<h1>Seu preparatório está aqui</h1>')
+      .split('<h1>Sua preparação, organizada para a sua prova</h1>').join('<h1>Seu preparatório está aqui</h1>')
+      .split('Videoaulas, materiais em PDF e quizzes organizados por disciplina, com trilhas extras para IDECAN, SUS e saúde pública.').join('Videoaulas, PDFs, quizzes e questões organizados para a sua preparação, com conteúdos direcionados ao concurso, à banca e ao cargo escolhido.')
+      .split('Videoaulas, PDFs, quizzes e questões comentadas por disciplina, com trilhas específicas para IDECAN, IBGP, SUS e saúde pública.').join('Videoaulas, PDFs, quizzes e questões organizados para a sua preparação, com conteúdos direcionados ao concurso, à banca e ao cargo escolhido.')
+      .split('Videoaulas, PDFs, reforços por matéria e acesso visual estilo área de membros para organizar seu estudo com mais clareza.').join('Estude em um só lugar com videoaulas, PDFs, quizzes, provas anteriores e conteúdos específicos do seu cargo.')
+      .split('Videoaulas, PDFs, quizzes e questões organizados por disciplina, com reforços direcionados para as bancas IDECAN e IBGP.').join('Estude em um só lugar com videoaulas, PDFs, quizzes, provas anteriores e conteúdos específicos do seu cargo.')
+      .split('Cada bloco abaixo reúne um player interno com 30 aulas por disciplina, PDFs organizados e um quiz por matéria. No bloco IDECAN, a trilha permanece como já estava.').join('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.')
+      .split('Cada bloco reúne aulas, PDFs e quiz por matéria. Em Português e Raciocínio Lógico você também encontra reforços com questões da banca IBGP, sem perder a trilha IDECAN já disponível.').join('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.');
     html = html.replace('</body>', '<script src="/ibgp-enhancement.js?v=20261005-2"></script></body>');
     if (!html.includes('jr-specific-card-style-v1')) {
       const cardCss = `
