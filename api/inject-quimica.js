@@ -7,6 +7,7 @@ const { insertAssistenteSocial } = require('../lib/assistente-social');
 const { insertMotorista } = require('../lib/motorista');
 const { insertServicosGerais } = require('../lib/servicos-gerais');
 const { insertPediatria } = require('../lib/pediatria');
+const { applyFrontHotfix } = require('../lib/front-hotfix');
 
 module.exports = async function handler(req, res) {
   try {
@@ -770,6 +771,7 @@ module.exports = async function handler(req, res) {
     html = insertMotorista(html);
     html = insertServicosGerais(html);
     html = insertPediatria(html);
+    html = applyFrontHotfix(html);
     res.end(html);
   } catch (error) {
     res.statusCode = 500;
