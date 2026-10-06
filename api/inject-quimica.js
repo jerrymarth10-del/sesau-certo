@@ -763,7 +763,9 @@ module.exports = async function handler(req, res) {
 
     res.statusCode = 200;
     res.setHeader('content-type', 'text/html; charset=utf-8');
-    res.setHeader('cache-control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
+    res.setHeader('cache-control', 'private, no-store, no-cache, max-age=0, must-revalidate');
+    res.setHeader('pragma', 'no-cache');
+    res.setHeader('expires', '0');
     html = insertAssistenteSocial(html);
     html = insertMotorista(html);
     html = insertServicosGerais(html);
