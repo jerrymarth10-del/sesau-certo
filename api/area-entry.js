@@ -13,6 +13,10 @@ function requestedTargetAreaFor(area,variant){
   if(area==="psicologia"&&variant==="semusa")return "psicologiasemusa";
   return area;
 }
+function purchaseProblem(res,status){
+  res.statusCode=status;res.setHeader("Content-Type","text/html; charset=utf-8");
+  return res.end('<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acesso ao preparatório</title><main style="max-width:520px;margin:15vh auto;padding:24px;font-family:system-ui"><h1>Vamos recuperar seu acesso</h1><p>Não foi possível confirmar sua liberação agora. Tente novamente ou recupere o acesso com os dados usados na compra.</p><p><button onclick="location.reload()">Tentar novamente</button></p><a href="https://semusa-sesau-app.vercel.app/">Recuperar acesso na página de compra</a></main></html>');
+}
 function legacyUrl(area){return PROJECT2_URL+"/?area="+encodeURIComponent(area);}
 
 module.exports=async function handler(req,res){
@@ -48,7 +52,7 @@ module.exports=async function handler(req,res){
     const purchasedFallback=legacyUrl(viewArea);
     const entitled=await hasEntitlement(email,purchasedArea,req,product);
     if(!entitled){
-      res.statusCode=302;res.setHeader("Location",purchasedFallback);return res.end();
+      return purchaseProblem(res,403);
     }
 
     const remaining=Math.max(60,Math.min(60*60*24*30,Math.floor((session.exp-Date.now())/1000)));
@@ -58,6 +62,6 @@ module.exports=async function handler(req,res){
     return res.end();
   }catch(err){
     console.error("Entrada por área SESAU/SEMUSA:",err?.message||err);
-    res.statusCode=302;res.setHeader("Location",requestedFallback);return res.end();
+    return purchaseProblem(res,503);
   }
 };

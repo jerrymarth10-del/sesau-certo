@@ -1,4 +1,4 @@
-const { safeEqual, createToken, setSessionCookie } = require("./_auth");
+const { safeEqual, createToken, setSessionCookie, sessionFromRequest } = require("./_auth");
 
 const GUARD_URL = "https://vendiro.com.br/api/sesau/login-guard";
 
@@ -83,7 +83,11 @@ module.exports = async function handler(req, res) {
   }
 
   const maxAgeSeconds = lembrar === true ? 60 * 60 * 24 * 30 : 60 * 60 * 12;
-  const token = createToken(normalizedEmail, maxAgeSeconds);
+  let previous=null;
+  try{previous=sessionFromRequest(req);}catch{}
+  const sameBuyer=previous?.email===normalizedEmail;
+  const token = createToken(normalizedEmail, maxAgeSeconds,
+    sameBuyer?previous.purchasedArea:"",sameBuyer?previous.purchasedProduct:"",sameBuyer?previous.purchasedVariant:"");
   setSessionCookie(res, token, maxAgeSeconds);
   return res.status(200).json({ok:true});
 };
