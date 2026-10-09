@@ -42,7 +42,7 @@ module.exports=async function handler(req,res){
     const maxAgeSeconds=60*60*24*30;
     const session=createToken(purchase.email,maxAgeSeconds,purchase.area,purchase.product,purchase.variant);
     setSessionCookie(res,session,maxAgeSeconds);
-    const directAreas=new Set(["acsfiscal","psicologia","administrativo","motorista","servicosgerais","clinico","pediatria"]);
+    const directAreas=new Set(["farmaceutico","acsfiscal","psicologia","administrativo","motorista","servicosgerais","clinico","pediatria"]);
     const directAreaEntry=directAreas.has(purchase.area);
     const directVariant=purchase.variant?"&variant="+encodeURIComponent(purchase.variant):"";
     const directUrl="/api/area-entry?area="+encodeURIComponent(purchase.area)+directVariant;

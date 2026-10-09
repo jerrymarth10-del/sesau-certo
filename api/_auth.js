@@ -67,7 +67,7 @@ function readCookies(req){
   return Object.fromEntries(raw.split(";").map(v=>{const i=v.indexOf("=");if(i<0)return ["",""];return [v.slice(0,i).trim(),decodeURIComponent(v.slice(i+1).trim())];}).filter(([k])=>k));
 }
 function sessionFromRequest(req){return verifyToken(readCookies(req)[COOKIE_NAME]);}
-function setSessionCookie(res,token,maxAgeSeconds=MAX_AGE_SECONDS){res.setHeader("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAgeSeconds}`);}
-function clearSessionCookie(res){res.setHeader("Set-Cookie",`${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`);}
+function setSessionCookie(res,token,maxAgeSeconds=MAX_AGE_SECONDS){res.setHeader("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSeconds}`);}
+function clearSessionCookie(res){res.setHeader("Set-Cookie",`${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);}
 
 module.exports={COOKIE_NAME,safeEqual,createToken,createAreaTicket,verifyAreaTicket,sessionFromRequest,setSessionCookie,clearSessionCookie};
