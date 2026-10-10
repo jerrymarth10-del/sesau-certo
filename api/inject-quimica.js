@@ -781,6 +781,15 @@ module.exports = async function handler(req, res) {
       function(_, area){ return 'href="/api/area-entry?area=' + encodeURIComponent(area) + '"'; }
     );
 
+    const { sessionFromRequest } = require('./_auth');
+    const { HEALTH_AREAS } = require('./_entitlement');
+    const studySession = sessionFromRequest(req);
+    if (studySession && HEALTH_AREAS.has(studySession.purchasedArea)) {
+      const specificUrl = '/api/area-entry?area=' + encodeURIComponent(studySession.purchasedArea);
+      html = html.replace('<main id="inicio">', `<main id="inicio"><section class="container" style="padding-top:24px"><div style="padding:22px;border:1px solid #254654;border-radius:16px;background:#102b39;color:#edf6fa"><strong style="font-size:20px">Seu preparatório completo</strong><p style="margin:10px 0 16px;line-height:1.6">Português e as demais matérias gerais estão nesta plataforma. As específicas do seu cargo estão no outro espaço.</p><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-primary" href="#disciplinas">Matérias gerais</a><a class="btn btn-primary" href="${specificUrl}">Específicas do meu cargo</a><a class="btn btn-outline" href="/api/study-entry">Meus dois acessos</a></div></div></section>`);
+      res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+    }
+
     res.end(html);
   } catch (error) {
     res.statusCode = 500;
