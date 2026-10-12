@@ -7,6 +7,7 @@ const { insertAssistenteSocial } = require('../lib/assistente-social');
 const { insertMotorista } = require('../lib/motorista');
 const { insertServicosGerais } = require('../lib/servicos-gerais');
 const { insertPediatria } = require('../lib/pediatria');
+const { insertTerapiaOcupacional } = require('../lib/terapiaocupacional');
 const { applyFrontHotfix } = require('../lib/front-hotfix');
 
 module.exports = async function handler(req, res) {
@@ -771,6 +772,7 @@ module.exports = async function handler(req, res) {
     html = insertMotorista(html);
     html = insertServicosGerais(html);
     html = insertPediatria(html);
+    html = insertTerapiaOcupacional(html);
     html = applyFrontHotfix(html);
 
     // Toda navegação do Projeto 1 para o Projeto 2 passa pela área comprada.
