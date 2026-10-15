@@ -52,6 +52,7 @@ module.exports = async function handler(req, res) {
   if(length>8192) return res.status(413).json({ok:false,message:"Requisição muito grande."});
 
   const configuredPassword = process.env.JR_PLATFORM_PASSWORD;
+  const manualPassword = process.env.JR_MANUAL_PLATFORM_PASSWORD;
   if (!configuredPassword || !process.env.JR_SESSION_SECRET) {
     return res.status(503).json({ok:false, message:"Autenticação ainda não configurada no servidor."});
   }
@@ -78,7 +79,9 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ok:false, message:"Informe e-mail e senha válidos."});
   }
 
-  if (!safeEqual(rawPassword, String(configuredPassword))) {
+  const matchesConfigured = safeEqual(rawPassword, String(configuredPassword));
+  const matchesManual = !!manualPassword && safeEqual(rawPassword, String(manualPassword));
+  if (!matchesConfigured && !matchesManual) {
     return res.status(401).json({ok:false, message:"E-mail ou senha incorretos."});
   }
 
