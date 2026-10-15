@@ -45,13 +45,14 @@ function verifyAreaTicket(token){
   }catch{return null;}
 }
 
-function createToken(email,maxAgeSeconds=MAX_AGE_SECONDS,purchasedArea="",purchasedProduct="",purchasedVariant=""){
+function createToken(email,maxAgeSeconds=MAX_AGE_SECONDS,purchasedArea="",purchasedProduct="",purchasedVariant="",accessMode="payment"){
   const product=PRODUCTS.has(String(purchasedProduct||""))?String(purchasedProduct):"";
   const payload=Buffer.from(JSON.stringify({
     email:String(email||"").slice(0,180),
     purchasedArea:String(purchasedArea||"").slice(0,80),
     purchasedProduct:product,
     purchasedVariant:String(purchasedVariant||"").slice(0,40),
+    accessMode:accessMode==="manual"?"manual":"payment",
     exp:Date.now()+maxAgeSeconds*1000
   })).toString("base64url");
   return payload+"."+sign(payload);
