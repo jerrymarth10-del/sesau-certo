@@ -16,6 +16,12 @@ module.exports = function handler(req, res) {
     res.setHeader('Location', '/');
     return res.end();
   }
+  // Apenas Cuidador Social: abre diretamente o bloco comprado; a página geral continua disponível.
+  if (session.purchasedArea === 'cuidadorsocial') {
+    res.statusCode = 302;
+    res.setHeader('Location', '/api/area-entry?area=cuidadorsocial');
+    return res.end();
+  }
   const specificUrl = '/api/area-entry?area=' + encodeURIComponent(session.purchasedArea);
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   return res.end(`<!doctype html>
