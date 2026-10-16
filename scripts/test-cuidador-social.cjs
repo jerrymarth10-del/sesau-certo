@@ -5,4 +5,5 @@ const out=insertCuidadorSocial(html);
 assert.match(out,/data-jr-card="cuidadorsocial"/);
 assert.match(out,/\/api\/area-entry\?area=cuidadorsocial/);
 assert.equal(insertCuidadorSocial(out),out);
+assert.match(out,/data:image\/svg\+xml;base64,/);
 console.log('OK: Cuidador Social Projeto 1');
