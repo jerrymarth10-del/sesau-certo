@@ -30,5 +30,5 @@ module.exports = function handler(req, res) {
 <body><main><div class="brand">JR APROVA</div><h1>Seu preparatório em dois espaços</h1><p>Acesse as matérias gerais e as específicas do seu cargo pelos botões abaixo.</p>
 <div class="cards"><section class="card"><small>SESAU CERTO</small><h2>Matérias gerais</h2><p>Português e as demais disciplinas gerais, com videoaulas e materiais organizados por matéria.</p><a href="/#disciplinas">Acessar matérias gerais</a></section>
 <section class="card"><small>ESPECÍFICAS PREMIUM</small><h2>Específicas do meu cargo</h2><p>Videoaulas específicas para o seu cargo, provas e materiais da sua área.</p><a href="${specificUrl}">Acessar específicas</a></section></div>
-<p class="note">Você pode voltar a esta página para alternar entre os dois espaços. O acesso às específicas usa o cargo confirmado na sua compra.</p></main></body></html>`);
+<p class="note">Você pode voltar a esta página para alternar entre os dois espaços. O acesso às específicas usa o cargo confirmado na sua compra.</p><p><a href="/api/pwa-home" style="display:block;margin-top:12px;padding:15px;border-radius:12px;background:#173d50;color:#fff;border:1px solid #63d6b1;font-weight:800;text-decoration:none;text-align:center">📲 Instalar aplicativo JR A Prova • Minha área comprada</a></p></main></body></html>`);
 };
