@@ -21,7 +21,7 @@ module.exports=async function handler(req,res){
  let session;try{session=sessionFromRequest(req);}catch{return res.status(200).end(recovery());}
  const area=String(session?.purchasedArea||'').trim().toLowerCase(),product=String(session?.purchasedProduct||''),variant=String(session?.purchasedVariant||'');
  const email=String(session?.email||'').trim().toLowerCase();
- if(session?.accessMode!=='payment'||!HEALTH_AREAS.has(area)||!PRODUCTS.has(product)||!/^\\S+@\\S+\\.\\S+$/.test(email))return res.status(200).end(recovery());
+ if(session?.accessMode!=='payment'||!HEALTH_AREAS.has(area)||!PRODUCTS.has(product)||!/^\S+@\S+\.\S+$/.test(email))return res.status(200).end(recovery());
  try{
    if(!(await hasEntitlement(email,area,req,product)))return res.status(403).end(page('<div class="brand">JR A PROVA</div><h1>Pagamento não confirmado</h1><p>Não encontramos uma compra aprovada para este cargo. Verifique seu pagamento e recupere o acesso na landing page.</p><a class="btn" href="/api/pwa-home">Tentar novamente</a>'));
    // Renova por até 30 dias apenas depois de verificar novamente o direito no servidor.
