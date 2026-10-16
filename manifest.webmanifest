@@ -1,9 +1,9 @@
 {
   "name": "JR A Prova — Plataforma de Estudos",
   "short_name": "JR A Prova",
-  "description": "JR A Prova — aulas, apostilas, questões, simulados e áreas específicas em um único aplicativo.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "JR A Prova — acesso individual às aulas e à área vinculada à compra confirmada.",
+  "start_url": "/api/student-app",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#07141a",
   "theme_color": "#07141a",
@@ -39,5 +39,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "/index.html"
 }
