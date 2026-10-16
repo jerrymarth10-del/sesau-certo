@@ -1,7 +1,7 @@
-const CACHE_NAME = "jr-a-prova-pwa-v5-student-copy";
+const CACHE_NAME = "jr-a-prova-pwa-v6-individual-access";
 const APP_SHELL = [
-   "./especificas.html",
   "./manifest.webmanifest",
+  "./student-install.js",
   "./icon-144.png",
   "./icon-256.png",
   "./icon-384.png",
