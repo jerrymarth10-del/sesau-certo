@@ -58,14 +58,6 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ok:false, message:"Autenticação ainda não configurada no servidor."});
   }
 
-  try{
-    if(!(await allowAttempt(req))){
-      return res.status(429).json({ok:false,message:"Muitas tentativas. Aguarde alguns minutos e tente novamente."});
-    }
-  }catch{
-    return res.status(503).json({ok:false,message:"Não foi possível validar o acesso agora."});
-  }
-
   const { email, senha, lembrar } = req.body || {};
   const normalizedEmail=String(email||"")
     .replace(/[\u200B-\u200D\uFEFF]/g,"")
@@ -88,35 +80,11 @@ module.exports = async function handler(req, res) {
   const matchesConfigured = safeEqual(rawPassword, String(configuredPassword));
   const matchesManual = !!manualPassword && safeEqual(rawPassword, String(manualPassword));
   if (!matchesConfigured && !matchesManual) {
+    recordFailure(key);
     return res.status(401).json({ok:false, message:"E-mail ou senha incorretos."});
   }
 
-  attempts.delete(key);\n  const maxAgeSeconds = lembrar === true ? 60 * 60 * 24 * 30 : 60 * 60 * 12;
-  // Manual/WhatsApp login is independent of payment entitlement.
-  // Its signed session never impersonates a paid purchase.
-  const token = createToken(normalizedEmail, maxAgeSeconds, "", "", "", "manual");
-  setSessionCookie(res, token, maxAgeSeconds);
-  return res.status(200).json({ok:true});
-};  const { email, senha, lembrar } = req.body || {};
-  const normalizedEmail=String(email||"")
-    .replace(/[\u200B-\u200D\uFEFF]/g,"")
-    .trim()
-    .toLowerCase()
-    .slice(0,180);
-  const rawPassword=String(senha||"")
-    .replace(/[\u200B-\u200D\uFEFF]/g,"")
-    .trim();
-
-  if (!/^\S+@\S+\.\S+$/.test(normalizedEmail) || !rawPassword || rawPassword.length>256) {
-    return res.status(400).json({ok:false, message:"Informe e-mail e senha válidos."});
-  }
-
-  const matchesConfigured = safeEqual(rawPassword, String(configuredPassword));
-  const matchesManual = !!manualPassword && safeEqual(rawPassword, String(manualPassword));
-  if (!matchesConfigured && !matchesManual) {
-    return res.status(401).json({ok:false, message:"E-mail ou senha incorretos."});
-  }
-
+  attempts.delete(key);
   const maxAgeSeconds = lembrar === true ? 60 * 60 * 24 * 30 : 60 * 60 * 12;
   // Manual/WhatsApp login is independent of payment entitlement.
   // Its signed session never impersonates a paid purchase.
