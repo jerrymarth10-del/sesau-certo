@@ -307,7 +307,7 @@ module.exports = async function handler(req, res) {
       const imageSrc = 'data:image/jpeg;base64,' + CHEMISTRY_CARD_BASE64;
 
       const card = `
-<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium.vercel.app/?area=quimica&v=12" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="quimica-seduc-pa" href="https://especificas-premium-semusa-sesau.vercel.app/?area=quimica&v=12" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="${imageSrc}" alt="SEDUC PA Professor de Química" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
     <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
@@ -332,7 +332,7 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="prf-administrativo"')) {
       const prfCard = `
-<a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium.vercel.app/?area=prf&v=15" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="prf-administrativo" href="https://especificas-premium-semusa-sesau.vercel.app/?area=prf&v=15" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${PRF_CARD_BASE64}" alt="PRF Agente Administrativo" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
     <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
@@ -380,7 +380,7 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="sefin-ro"')) {
       const sefinCard = `
-<a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium.vercel.app/?area=sefin&v=2" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="sefin-ro" href="https://especificas-premium-semusa-sesau.vercel.app/?area=sefin&v=2" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img src="data:image/jpeg;base64,${SEFIN_CARD_BASE64}" alt="SEFIN/RO Material Geral" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
     <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>\n    <div class="especifica-admin-body jr-image-card-body" aria-hidden="true">
@@ -405,7 +405,7 @@ module.exports = async function handler(req, res) {
 
     if (!html.includes('data-jr-card="policia-penal-ro"')) {
       const penalCard = `
-<a class="especifica-card-link" data-jr-card="policia-penal-ro" href="https://especificas-premium.vercel.app/?area=penal&v=1" target="_blank" rel="noopener">
+<a class="especifica-card-link" data-jr-card="policia-penal-ro" href="https://especificas-premium-semusa-sesau.vercel.app/?area=penal&v=1" target="_blank" rel="noopener">
   <div class="especifica-card">
     <img class="jr-front-art" src="${POLICIA_PENAL_ART}" alt="Polícia Penal Rondônia" width="640" height="960" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#05070b;transform:none;transition:none">
     <div class="especifica-admin-body jr-new-card-access"><span class="especifica-admin-btn">Acessar</span></div>
