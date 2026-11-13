@@ -797,6 +797,7 @@ module.exports = async function handler(req, res) {
     html = insertCuidadorSocial(html);
     html = insertSecretariaEscolar(html);
     html = applyFrontHotfix(html);
+    html = require('../lib/pwa-install').applyPwaInstall(html);
 
     // Toda navegação do Projeto 1 para o Projeto 2 passa pela área comprada.
     // Se houver uma compra SESAU/SEMUSA ativa, o backend ignora o card clicado
