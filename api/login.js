@@ -1,40 +1,41 @@
 const { safeEqual, createToken, setSessionCookie } = require("./_auth");
 
-const GUARD_URL = "https://vendiro.com.br/api/sesau/login-guard";
+// Local login throttling for the migrated Vercel project. The previous
+// remote guard was bound to the former Vercel OIDC identity and rejected
+// legitimate first-time logins after the account migration.
+const attempts = new Map();
+const WINDOW_MS = 15 * 60 * 1000;
+const MAX_FAILURES = 8;
 
-function clientIp(req){
-  const raw=String(req.headers["x-forwarded-for"]||"").split(",")[0].trim() || String(req.headers["x-real-ip"]||"").trim();
-  return raw.length<=64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
+function clientIp(req) {
+  const raw = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim()
+    || String(req.headers["x-real-ip"] || "").trim();
+  return raw.length <= 64 && /^[0-9a-fA-F:.]+$/.test(raw) ? raw : "unknown";
 }
-
-function serviceToken(req){
-  const token=String(req.headers["x-vercel-oidc-token"]||process.env.VERCEL_OIDC_TOKEN||"").trim();
-  if(!token && String(process.env.VERCEL_ENV||"").toLowerCase()==="production"){
-    throw new Error("Identidade interna da Vercel indisponível.");
+function attemptKey(req, email) {
+  return clientIp(req) + "|" + email;
+}
+function isBlocked(key) {
+  const now = Date.now();
+  const record = attempts.get(key);
+  if (!record || now - record.startedAt >= WINDOW_MS) {
+    attempts.delete(key);
+    return false;
   }
-  return token;
+  return record.failures >= MAX_FAILURES;
 }
-
-async function allowAttempt(req){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),8000);
-  try{
-    const oidc=serviceToken(req);
-    const response=await fetch(GUARD_URL,{
-      method:"POST",
-      cache:"no-store",
-      signal:controller.signal,
-      headers:{
-        "Content-Type":"application/json",
-        "Accept":"application/json",
-        ...(oidc?{"Authorization":"Bearer "+oidc}:{}),
-        "X-JR-Client-IP":clientIp(req)
-      },
-      body:"{}"
-    });
-    return response.ok;
-  }finally{
-    clearTimeout(timer);
+function recordFailure(key) {
+  const now = Date.now();
+  const record = attempts.get(key);
+  if (!record || now - record.startedAt >= WINDOW_MS) {
+    attempts.set(key, { startedAt: now, failures: 1 });
+  } else {
+    record.failures += 1;
+  }
+  if (attempts.size > 5000) {
+    for (const [k, v] of attempts) {
+      if (now - v.startedAt >= WINDOW_MS) attempts.delete(k);
+    }
   }
 }
 
@@ -66,6 +67,37 @@ module.exports = async function handler(req, res) {
   }
 
   const { email, senha, lembrar } = req.body || {};
+  const normalizedEmail=String(email||"")
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .trim()
+    .toLowerCase()
+    .slice(0,180);
+  const rawPassword=String(senha||"")
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .trim();
+
+  if (!/^\S+@\S+\.\S+$/.test(normalizedEmail) || !rawPassword || rawPassword.length>256) {
+    return res.status(400).json({ok:false, message:"Informe e-mail e senha válidos."});
+  }
+
+  const key = attemptKey(req, normalizedEmail);
+  if (isBlocked(key)) {
+    return res.status(429).json({ok:false,message:"Muitas tentativas. Aguarde 15 minutos e tente novamente."});
+  }
+
+  const matchesConfigured = safeEqual(rawPassword, String(configuredPassword));
+  const matchesManual = !!manualPassword && safeEqual(rawPassword, String(manualPassword));
+  if (!matchesConfigured && !matchesManual) {
+    return res.status(401).json({ok:false, message:"E-mail ou senha incorretos."});
+  }
+
+  attempts.delete(key);\n  const maxAgeSeconds = lembrar === true ? 60 * 60 * 24 * 30 : 60 * 60 * 12;
+  // Manual/WhatsApp login is independent of payment entitlement.
+  // Its signed session never impersonates a paid purchase.
+  const token = createToken(normalizedEmail, maxAgeSeconds, "", "", "", "manual");
+  setSessionCookie(res, token, maxAgeSeconds);
+  return res.status(200).json({ok:true});
+};  const { email, senha, lembrar } = req.body || {};
   const normalizedEmail=String(email||"")
     .replace(/[\u200B-\u200D\uFEFF]/g,"")
     .trim()
