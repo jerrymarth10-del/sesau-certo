@@ -1,6 +1,6 @@
 const { sessionFromRequest, createAreaTicket } = require("./_auth");
 const { HEALTH_AREAS, hasEntitlement } = require("./_entitlement");
-const PROJECT2_URL="https://especificas-premium.vercel.app";
+const PROJECT2_URL="https://especificas-premium-semusa-sesau.vercel.app";
 const SEMUSA_PRODUCT="semusa-pvh-2026";
 const LEGACY_AREAS=new Set(["quimica","prf","penal","sefin","pedagogia","supervisao","jiparana","vigilante","cuidadorsocial"]);
 
