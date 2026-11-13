@@ -148,6 +148,26 @@ module.exports = async function handler(req, res) {
       .split('Videoaulas, PDFs, quizzes e questões organizados por disciplina, com reforços direcionados para as bancas IDECAN e IBGP.').join('Estude em um só lugar com videoaulas, PDFs, quizzes, provas anteriores e conteúdos específicos do seu cargo.')
       .split('Cada bloco abaixo reúne um player interno com 30 aulas por disciplina, PDFs organizados e um quiz por matéria. No bloco IDECAN, a trilha permanece como já estava.').join('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.')
       .split('Cada bloco reúne aulas, PDFs e quiz por matéria. Em Português e Raciocínio Lógico você também encontra reforços com questões da banca IBGP, sem perder a trilha IDECAN já disponível.').join('Cada bloco reúne conteúdos organizados por disciplina. As trilhas e materiais específicos são apresentados conforme o concurso, a banca e o cargo do aluno.');
+
+    // Metadados entregues ao WhatsApp e demais serviços de compartilhamento.
+    const shareTitle = "JR Aprova | Preparatório SESAU e SEMUSA";
+    const shareDescription = "Sua preparação começa aqui! Acesse videoaulas, apostilas em PDF e questões para estudar com foco nos concursos SESAU e SEMUSA.";
+    html = html
+      .replace(/<title>[\s\S]*?<\/title>/i, '<title>' + shareTitle + '</title>')
+      .replace(/<meta\b[^>]*\bname=["']description["'][^>]*>/gi, '')
+      .replace(/<meta\b[^>]*(?:property|name)=["'](?:og:|twitter:)[^"']*["'][^>]*>/gi, '');
+    html = html.replace('</head>', [
+      '<meta name="description" content="' + shareDescription + '" />',
+      '<meta property="og:type" content="website" />',
+      '<meta property="og:locale" content="pt_BR" />',
+      '<meta property="og:site_name" content="JR Aprova" />',
+      '<meta property="og:title" content="' + shareTitle + '" />',
+      '<meta property="og:description" content="' + shareDescription + '" />',
+      '<meta name="twitter:card" content="summary" />',
+      '<meta name="twitter:title" content="' + shareTitle + '" />',
+      '<meta name="twitter:description" content="' + shareDescription + '" />',
+      '</head>'
+    ].join('\n'));
     html = html.replace('</body>', '<script src="/ibgp-enhancement.js?v=20261005-2"></script></body>');
     if (!html.includes('jr-specific-card-style-v1')) {
       const cardCss = `
